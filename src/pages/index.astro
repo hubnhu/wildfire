@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Collaboration from '../components/Collaboration.astro';
+import { publishedProjects, founder } from '../lib/content.mjs';
+const projects = publishedProjects();
+const comparisons = [
+  ['做的是什么', '真实的项目，有的已经上线', '公司的真实业务，但进门的门槛高', '多是安排好的课题', '练习和作业'],
+  ['钱', '不收费，也没有工资', '一般有工资', '你付钱', '你付学费'],
+  ['谁来带', '项目发起人本人', '公司里的同事', '机构安排的导师', '讲师'],
+  ['你拿到什么', '项目经历证明、发起人的推荐信、作品集展示权', '实习证明和工资', '一份证明', '结业证书'],
+];
+const steps = [
+  ['01', '提交申请', '说说你是谁，想做哪个项目，能做什么。'],
+  ['02', '一次轻量面试', '野火团队和项目发起人一起面。比正式求职的面试轻，主要看你想做什么、能做什么。'],
+  ['03', '开工', '进入项目，像开始一份真实的工作那样开始。'],
+];
+---
+<Layout title="野火 Wildfire · 真实项目共创，积累实战经历" description="真项目，缺人做。想做事的人，缺机会。野火把这两边放到一起。面向在校大学生和想转行的人，由发起人亲自把关，不收费，也没有工资。" home>
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://wildfire.hubn.com/#website",
+        "url": "https://wildfire.hubn.com/",
+        "name": "野火 Wildfire",
+        "description": "真项目，缺人做。想做事的人，缺机会。野火把这两边放到一起。不收费，也没有工资。",
+        "inLanguage": "zh-CN"
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://wildfire.hubn.com/#organization",
+        "name": "野火 Wildfire",
+        "url": "https://wildfire.hubn.com/",
+        "founder": {
+          "@type": "Person",
+          "name": founder?.name || "白老师"
+        }
+      }
+    ]
+  })} />
+  <section id="top" class="hero">
+    <div class="container stack gap-36">
+      <div class="eyebrow muted">项目工作室 · 由发起人亲自把关</div>
+      <h1><span class="hero-line">真项目，缺人做。</span><span class="hero-line">想做事的人，缺机会。</span></h1>
+      <p class="hero-copy">野火把这两边放到一起。你加入一个真实的项目，由发起人亲自带，做出来的东西是真的，能写进简历。不收费，也没有工资。</p>
+      <div class="button-row"><a href="/apply" class="button">申请加入</a><a href="#projects" class="button button-outline">看看在做的项目</a></div>
+    </div>
+  </section>
+  <section id="idea" class="panel">
+    <div class="container two-column">
+      <div class="stack gap-20"><div class="eyebrow">理念</div><h2>星星之火，<br />可以燎原。</h2><p class="note muted">没人看好的一点火，自己烧成一片。</p></div>
+      <div class="stack gap-28 body-large secondary">
+        <p><strong>一边是学生，和想转行的人。</strong>实习越来越难找，有人愿意不要钱去实习，甚至有人花钱买实习机会。想转行的人，卡在没有相关经历上。他们缺的不是课，是一段拿得出手的真实经历。</p>
+        <p><strong>另一边是手上有项目的人。</strong>有些东西值得试，但还不值得专门招人，自己又没时间，就一直放着。</p>
+        <p><strong>这两边正好互补。</strong>最拔尖的学生不需要野火，他们已经拿到 offer 了。野火找的是差一口气的那批人：能力还行，只是没人给机会。</p>
+        <p>现在有了 AI 工具，一个肯学的新人能做的事，比几年前多得多。</p>
+      </div>
+    </div>
+  </section>
+  <section id="different" class="light">
+    <div class="container stack gap-36">
+      <div class="stack measure"><div class="eyebrow">有何不同</div><h2>不是实习，不是课程，<br />也不卖证明。</h2><p class="body-large secondary">先把话说清楚：野火不发工资，不收费。它给的是一段真实的项目经历。</p></div>
+      <div class="comparison-wrap" tabindex="0" role="region" aria-label="野火与其他参与方式的对比，可左右滚动">
+        <table class="comparison">
+          <thead><tr><th scope="col"></th><th scope="col" class="wildfire-column">野火</th><th scope="col">普通实习</th><th scope="col">付费实习、背景提升</th><th scope="col">训练营、课程</th></tr></thead>
+          <tbody>{comparisons.map(([label, ...cells]) => <tr><th scope="row">{label}</th>{cells.map((cell, index) => <td class:list={{ 'wildfire-column': index === 0 }}>{cell}</td>)}</tr>)}</tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+  <section id="projects">
+    <div class="container stack gap-36">
+      <div class="section-heading">
+        <div class="stack"><div class="eyebrow">项目</div><h2>正在做的项目</h2></div>
+        <div class="project-controls"><span>共 <span data-count>{projects.length}</span> 个，左右拖动查看</span>
+          <button type="button" class="arrow-button" aria-label="上一个项目" data-step="-1" aria-controls="project-scroller"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></button>
+          <button type="button" class="arrow-button" aria-label="下一个项目" data-step="1" aria-controls="project-scroller"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></button>
+        </div>
+      </div>
+      <div id="project-scroller" data-scroller="projects" class="project-scroller" tabindex="0" role="region" aria-label="正在做的项目，可左右滚动">{projects.map((project) => <ProjectCard project={project} />)}</div>
+    </div>
+  </section>
+  <section id="join" class="panel">
+    <div class="container stack gap-48">
+      <div class="stack measure"><div class="eyebrow">如何参与</div><h2>条件写在明处</h2></div>
+      <div class="benefit-grid">
+        <div class="stack gap-14 benefit-column"><h3>你能得到什么</h3><ul class="list"><li>一段真实的项目经历，有人带</li><li>项目经历证明</li><li>发起人本人写的推荐信，只写实际发生的事</li><li>自己所做部分的作品集展示权</li></ul><p class="small muted">不承诺工作机会，不承诺报酬。</p></div>
+        <div class="stack gap-14 benefit-column"><h3>你要付出什么</h3><ul class="list"><li>时间和执行。没有工资</li><li>不设硬性的时间要求</li></ul><p><strong>但这里没有捷径。投入多少，带走多少。</strong></p><p class="small muted">肯把时间放进来的人，才会带着拿得出手的东西离开。中途可以退出，走之前说一声，留几句交接说明。</p></div>
+        <div class="stack gap-14 benefit-column"><h3>成果归谁</h3><ul class="list"><li>项目成果归项目发起人</li><li>你自己做的那部分，你可以拿去成立公司，继续发展。发起人也可以拿整个项目这样做</li><li>项目花钱买的东西归出钱的人，多数情况是发起人。比如域名、服务器，也包括项目积累的用户</li><li>你做的部分，可以一直放在作品集里展示</li></ul><p class="small muted">完整条款见<a class="text-link" href="/terms">参与须知</a>。</p></div>
+      </div>
+      <p class="company-note">部分项目以实习或招聘的方式开启。这类项目遵循项目方公司的规则，不适用上面的共创规则。</p>
+      <div class="stack gap-24">
+        <h3>加入的三步</h3>
+        <ol class="step-list">{steps.map(([number, title, description]) => <li class="step stack gap-10"><div class="step-number">{number}</div><strong class="body-large">{title}</strong><p class="small muted">{description}</p></li>)}</ol>
+        <div class="after-join stack gap-24"><div class="stack gap-10 measure"><h3 class="collaboration-heading">加入之后，是一份真实工作的样子</h3><p class="body-large secondary">你不是来旁听的，也不是来做练习题的。你会被当成团队里的一个人。</p></div><Collaboration /></div>
+      </div>
+    </div>
+  </section>
+  {founder && <section id="founder"><div class="container two-column">
+    <div class="stack"><div class="eyebrow">我是谁</div><h2>{founder.name}</h2><div class="qr-block stack gap-8"><a href="/assets/xhs-qr.png" target="_blank" rel="noopener noreferrer" aria-label="查看白老师的小红书二维码大图"><img src="/assets/xhs-qr.png" class="qr" width="180" height="180" alt="白老师的小红书主页二维码" loading="lazy" /></a><div class="small muted">用小红书扫一扫，点击二维码查看大图</div>{founder.xhsId && <div class="small muted">小红书号：{founder.xhsId}</div>}<a class="text-link note" href={founder.xhsUrl} target="_blank" rel="noopener noreferrer">或者直接打开我的小红书主页 →</a></div></div>
+    <div class="stack gap-22 body-large secondary">{founder.bio.map((paragraph) => <p>{paragraph}</p>)}<a href={`/initiators/${founder.slug}`} class="button button-outline">看我发起的项目 →</a></div>
+  </div></section>}
+  <section id="apply" class="light"><div class="container two-column"><div class="stack gap-20"><div class="eyebrow">申请</div><h2>想来试试？</h2><p class="body-large secondary measure-narrow">面向在校大学生，也面向想转行、想积攒经验的人。看的是你肯不肯做事。</p><a class="button" href="/apply">申请加入</a></div></div></section>
+</Layout>
+<script>
+  import '../scripts/projects';
+</script>

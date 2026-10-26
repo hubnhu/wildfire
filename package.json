@@ -1,0 +1,29 @@
+{
+  "name": "wildfire",
+  "private": true,
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "node scripts/validate-data.mjs && ASTRO_TELEMETRY_DISABLED=1 astro build && node scripts/generate-sitemap.mjs && node scripts/check-content.mjs",
+    "build:draft": "ALLOW_DRAFT=1 npm run build",
+    "build:closed": "node scripts/build-closed.mjs",
+    "build:ci": "npm test && npm run build",
+    "deploy:ci": "node scripts/wrangler.mjs deploy --config wrangler.jsonc --strict",
+    "serve": "npm run build:draft && node scripts/serve.mjs",
+    "check:content": "node scripts/check-content.mjs",
+    "check:data": "node scripts/validate-data.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:browser": "playwright test",
+    "test:data-build": "node tests/build-scenarios.mjs",
+    "worker:dev": "npm run build:draft && node scripts/wrangler.mjs dev --port 8787",
+    "worker:check": "node scripts/wrangler.mjs deploy --dry-run --outdir .worker-build",
+    "deploy": "node scripts/release.mjs",
+    "deploy:closed": "node scripts/deploy-closed.mjs",
+    "terms:archive": "node scripts/archive-terms.mjs"
+  },
+  "dependencies": { "astro": "7.3.8" },
+  "devDependencies": { "@playwright/test": "1.64.0", "wrangler": "4.149.0" }
+}

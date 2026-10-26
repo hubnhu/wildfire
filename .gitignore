@@ -1,0 +1,35 @@
+node_modules/
+dist/
+dist-closed/
+.astro/
+.wrangler/
+.worker-build/
+.worker-closed-build/
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+test-results/
+playwright-report/
+artifacts/screenshots/
+.DS_Store
+CLAUDE.local.md
+
+# Private owner documentation and operational evidence
+/docs/local/
+/wildfire-handoff/
+/artifacts/deployments/
+
+# Local credentials and private keys
+/.secrets/
+/.aws/
+/.npmrc
+/.netrc
+/secrets.json
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore

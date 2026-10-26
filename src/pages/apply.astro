@@ -1,0 +1,34 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site, termsLabel, statusOptions, roles, applicationProjects } from '../lib/content.mjs';
+const applicationsClosed = process.env.WILDFIRE_APPLICATIONS_CLOSED === '1';
+---
+<Layout title="申请加入 · 野火 Wildfire" description="申请加入野火。面向在校大学生和想转行、想积攒经验的人。说说你是谁，想做什么岗位，能做什么。">
+  <section class="narrow-page"><div class="container form-width stack gap-36">
+    <div class="stack gap-14"><div class="eyebrow">申请</div><h1 class="page-title">申请加入野火</h1><p class="body-large secondary">{applicationsClosed ? '申请暂未开放，表格暂时不能提交。' : '几分钟能填完。'}</p></div>
+    <div data-state="sent" hidden tabindex="-1" role="status"><div class="form-message stack gap-12"><h2 class="success-heading">收到了</h2><p class="body-large secondary">{site.applicationSuccess}</p><a class="text-link" href="/">回到首页</a></div></div>
+    <div data-state="form">
+      <form id="application-form" class="application-form stack" method="post" action="/api/apply" enctype="multipart/form-data" data-resume-max={site.resumeMaxMb}>
+        <div id="form-error" class="form-error" role="alert" tabindex="-1" hidden></div>
+        <fieldset disabled={applicationsClosed} class="application-fields stack">
+        <div class="honeypot" aria-hidden="true"><label for="f-website">Website</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" /></div>
+        <input type="hidden" name="termsVersion" value={termsLabel} />
+        <div class="field"><label for="f-name">怎么称呼你</label><input class="field-control" id="f-name" name="name" type="text" required autocomplete="name" maxlength="100" /></div>
+        <div class="field"><label for="f-contact">联系方式</label><div id="contact-help" class="small muted">微信号或邮箱</div><input class="field-control" id="f-contact" name="contact" type="text" required maxlength="200" aria-describedby="contact-help" /></div>
+        <fieldset><legend>你现在的状态</legend><div class="choices">{Object.entries(statusOptions).map(([value, label]) => <label class="choice"><input type="radio" name="status" value={value} required />{label}</label>)}</div></fieldset>
+        <div class="field"><label for="f-project">想加入哪个项目</label><select class="field-control" id="f-project" name="project" aria-describedby="project-help"><option value="any">{site.generalApplicationLabel}</option>{applicationProjects().map((project) => <option value={project.slug}>{project.name}</option>)}</select><div id="project-help" class="small muted">{site.generalApplicationHelp}</div></div>
+        <fieldset><legend>想做的岗位（可多选）</legend><div class="choices">{roles.map(({ id, name }) => <label class="choice"><input type="checkbox" name="role" value={id} />{name}</label>)}</div></fieldset>
+        <div class="field"><label for="f-resume">简历</label><div id="resume-help" class="small muted">PDF 或 Word。单个文件，不超过 {site.resumeMaxMb}MB。</div><input class="field-control" id="f-resume" name="resume" type="file" required accept=".pdf,.doc,.docx" aria-describedby="resume-help" /></div>
+        <div class="field"><label for="f-time">每周大概能投入多少时间</label><div id="time-help" class="small muted">没有硬性要求，如实写就行。</div><input class="field-control" id="f-time" name="time" type="text" required maxlength="200" aria-describedby="time-help" /></div>
+        <div class="field"><label for="f-work">你做过的东西（选填）</label><div id="work-help" class="small muted">贴链接，或者用几句话讲。课程作业、自己捣鼓的小东西都算。</div><textarea class="field-control" id="f-work" name="work" rows="4" maxlength="5000" aria-describedby="work-help"></textarea></div>
+        <div class="field"><label for="f-why">为什么想来（选填）</label><textarea class="field-control" id="f-why" name="why" rows="4" maxlength="5000"></textarea></div>
+        <label class="consent"><input id="f-tos" type="checkbox" name="tos" value="yes" required /><span>我已阅读并同意<a href="/terms" target="_blank" rel="noopener noreferrer">参与须知</a>。我知道参与没有工资，项目成果归项目发起人。</span></label>
+        <button class="button form-submit" type="submit">{applicationsClosed ? '申请暂未开放' : '提交申请'}</button>
+        </fieldset>
+      </form>
+    </div>
+  </div></section>
+</Layout>
+<script>
+  import '../scripts/apply';
+</script>

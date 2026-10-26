@@ -1,0 +1,12 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TermsContent from '../components/TermsContent.astro';
+import { terms, termsLabel } from '../lib/content.mjs';
+---
+<Layout title="参与须知 · 野火 Wildfire" description="野火参与须知。申请前请读完，了解无薪协作、成果归属及资料处理规则。提交申请时需勾选同意。">
+  <section class="narrow-page"><div class="container terms-width stack gap-40">
+    <div class="stack gap-14"><h1 class="page-title">参与须知</h1><p class="body-large secondary">申请前请读完。提交申请时需要勾选同意。</p><p class="small muted" data-terms-version>最后更新：{termsLabel}</p></div>
+    <TermsContent terms={terms} />
+    <a class="button" href="/apply">去申请</a>
+  </div></section>
+</Layout>

@@ -1,0 +1,15 @@
+---
+const { home = false } = Astro.props;
+const links = home
+  ? [['理念', '#idea'], ['有何不同', '#different'], ['项目', '#projects'], ['如何参与', '#join'], ['我是谁', '#founder']]
+  : [['首页', '/'], ['全部项目', '/#projects']];
+---
+<header class="site-header">
+  <div class="container header-inner">
+    <a href={home ? '#top' : '/'} class="brand"><span class="brand-zh">野火</span><span class="brand-en">WILDFIRE</span></a>
+    <nav aria-label="主导航" class="nav">
+      {links.map(([label, href]) => <a href={href}>{label}</a>)}
+    </nav>
+    <a href="/apply" class="button header-apply">申请加入</a>
+  </div>
+</header>

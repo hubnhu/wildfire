@@ -1,0 +1,9 @@
+# Copy to ignored .dev.vars for local Wrangler development.
+# Example addresses only; actual mailboxes and keys stay outside Git.
+EMAIL_PROVIDER=resend
+EMAIL_API_KEY=
+EMAIL_FROM="野火申请 <apply@example.invalid>"
+APPLY_TO_EMAIL=owner@example.invalid
+# Must equal the published version in src/data/terms/current.json.
+TERMS_VERSION=
+RESUME_MAX_MB=5

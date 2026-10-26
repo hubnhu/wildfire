@@ -1,0 +1,16 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import TermsContent from '../../../components/TermsContent.astro';
+export function getStaticPaths() {
+  const archives = import.meta.glob('../../../data/terms/archive/*.json', { eager: true, import: 'default' });
+  return Object.values(archives).map((terms) => ({ params: { version: terms.version }, props: { terms } }));
+}
+const { terms } = Astro.props;
+---
+<Layout title={`野火参与须知 ${terms.version}`} description="参与须知的历史版本。" noindex={true} canonical="https://wildfire.hubn.com/terms">
+  <section class="narrow-page"><div class="container terms-width stack gap-40">
+    <div class="stack gap-14"><h1 class="page-title">参与须知</h1><p class="small muted">最后更新：{terms.version}</p></div>
+    <TermsContent terms={terms} />
+    <a class="text-link" href="/terms">参与须知</a>
+  </div></section>
+</Layout>

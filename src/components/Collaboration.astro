@@ -1,0 +1,9 @@
+---
+import { collaboration as items } from '../lib/content.mjs';
+---
+<div class="collaboration-grid">
+  {items.map((item) => <div class="stack gap-6">
+    <strong class="body-large">{item.title}</strong>
+    <p class="note muted">{item.description}</p>
+  </div>)}
+</div>

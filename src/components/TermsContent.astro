@@ -1,0 +1,8 @@
+---
+const { terms } = Astro.props;
+---
+{terms.sections.map((clause) => <section class="terms-clause stack gap-10">
+  <h2>{clause.title}</h2>
+  {clause.paragraphs.map((paragraph) => <p class="secondary">{paragraph}</p>)}
+  {clause.items.length > 0 && <ul class="list">{clause.items.map((item) => <li>{item}</li>)}</ul>}
+</section>)}

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "product",
+    "name": "产品"
+  },
+  {
+    "id": "design",
+    "name": "设计"
+  },
+  {
+    "id": "dev",
+    "name": "开发"
+  },
+  {
+    "id": "data",
+    "name": "数据"
+  },
+  {
+    "id": "social",
+    "name": "社交媒体运营"
+  }
+]

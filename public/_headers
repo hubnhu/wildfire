@@ -1,0 +1,9 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/terms
+  Cache-Control: no-cache
+
+/apply
+  Cache-Control: no-cache

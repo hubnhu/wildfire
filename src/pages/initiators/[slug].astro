@@ -1,0 +1,14 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { initiators, initiatorProjects } from '../../lib/content.mjs';
+export function getStaticPaths() {
+  return initiators.filter((initiator) => initiatorProjects(initiator.slug).length > 0).map((initiator) => ({ params: { slug: initiator.slug }, props: { initiator } }));
+}
+const { initiator } = Astro.props;
+const projects = initiatorProjects(initiator.slug);
+---
+<Layout title={`${initiator.name} · 野火项目发起人`} description={`${initiator.name}：${initiator.oneLiner} 查看在野火发起的真实共创项目。`}>
+  <section class="detail-hero"><div class="container stack gap-22"><a class="text-link back-link" href="/#projects">← 全部项目</a><div class="eyebrow muted">项目发起人</div><h1 class="initiator-name">{initiator.name}</h1><p class="initiator-tagline secondary measure-copy">{initiator.oneLiner}</p>{initiator.bio.map((paragraph) => <p class="body-large secondary measure-copy">{paragraph}</p>)}{initiator.links?.length > 0 && <div class="button-row">{initiator.links.map(({ label, url }) => <a class="text-link" href={url} target="_blank" rel="noopener noreferrer">{label}</a>)}</div>}</div></section>
+  <section class="panel detail-section"><div class="container stack gap-28"><div class="eyebrow">在野火发起的项目</div><div class="initiator-projects">{projects.map((project) => <article class="initiator-project stack gap-8" data-project={project.slug}><div class="initiator-project-name">{project.hasDetailPage ? <a class="text-link" href={`/projects/${project.slug}`}>{project.name}</a> : project.name}</div><p class="note muted">{project.oneLiner} · {project.status}</p></article>)}</div></div></section>
+  <section class="light detail-section"><div class="container stack gap-20"><h2>想来试试？</h2><p class="body-large secondary measure-narrow">面向在校大学生，也面向想转行、想积攒经验的人。不收费，也没有工资。</p><a class="button" href="/apply">申请加入</a></div></section>
+</Layout>

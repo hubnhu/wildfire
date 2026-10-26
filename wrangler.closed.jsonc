@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "wildfire",
+  "main": "worker/index.mjs",
+  "compatibility_date": "2026-10-09",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": true,
+  "routes": [
+    { "pattern": "wildfire.hubn.com", "custom_domain": true }
+  ],
+  "assets": {
+    "directory": "./dist-closed",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"],
+    "not_found_handling": "404-page"
+  },
+  "vars": {
+    "APPLICATIONS_CLOSED": "1",
+    "RESUME_MAX_MB": "5",
+    "EMAIL_PROVIDER": "resend",
+    "EMAIL_FROM": "野火申请 <wildfire@forms.hubn.com>"
+  },
+  "observability": { "enabled": false }
+}
