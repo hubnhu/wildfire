@@ -2,7 +2,7 @@
 
 ## 自动部署
 
-公开仓库 [hubnhu/wildfire](https://github.com/hubnhu/wildfire) 的 main 是发布分支。贡献者经 PR 合入，维护者负责发布；Cloudflare Workers Builds 安装锁定依赖，运行 `npm run build:ci`，再运行 `npm run deploy:ci`，以 wrangler.jsonc 更新 wildfire Worker。当前不用 GitHub Actions。
+公开仓库 [hubnhu/wildfire](https://github.com/hubnhu/wildfire) 的 main 是发布分支。贡献者经 PR 合入，维护者负责发布；Cloudflare Workers Builds 安装锁定依赖，运行 `npm run build:ci`，再运行 `npm run deploy:ci`，以 wrangler.jsonc 更新 wildfire Worker。GitHub Actions 的 `.github/workflows/ci.yml` 只在 PR 和 main 推送上运行 `npm run build:ci`，不部署。
 
 发布记录在 Git 与 Cloudflare；不因发布一次补写文档。当前状态与验证只见 [PROJECT](PROJECT.md)。
 
