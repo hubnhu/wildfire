@@ -25,5 +25,5 @@
     "terms:archive": "node scripts/archive-terms.mjs"
   },
   "dependencies": { "astro": "7.3.8" },
-  "devDependencies": { "@playwright/test": "1.64.0", "wrangler": "4.149.0" }
+  "devDependencies": { "@playwright/test": "1.64.0", "wrangler": "4.157.0" }
 }
