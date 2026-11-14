@@ -6,5 +6,5 @@ delete env.ALLOW_DRAFT;
 delete env.WILDFIRE_APPLICATIONS_CLOSED;
 const build = spawnSync('npm', ['run', 'build'], { env, stdio: 'inherit' });
 if (build.status !== 0) process.exit(build.status ?? 1);
-const release = spawnSync(process.execPath, ['scripts/wrangler.mjs', 'deploy'], { env, stdio: 'inherit' });
+const release = spawnSync(process.execPath, ['scripts/wrangler.mjs', 'deploy', '--config', 'wrangler.jsonc', '--env='], { env, stdio: 'inherit' });
 process.exitCode = release.status ?? 1;

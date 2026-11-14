@@ -63,6 +63,42 @@ test('successful submit creates one email with attachment, ordered fields and co
   assert(positions.every((position, index) => position >= 0 && (index === 0 || position > positions[index - 1])));
 });
 
+const stagingEnvironment = () => ({
+  ...environment(), STAGING: '1', STAGING_EMAIL_API_KEY: 'staging-test-only',
+  STAGING_EMAIL_FROM: 'staging@wildfire.example', STAGING_APPLY_TO_EMAILS: 'qa1@example.invalid, qa2@example.invalid, qa1@example.invalid',
+});
+
+test('staging sends one labeled application with its attachment to the configured testers', async () => {
+  const calls = [];
+  const response = await handleApply(request(), stagingEnvironment(), {
+    ...options, fetcher: async (_url, init) => { calls.push(init); return successful(); },
+  });
+  assert.equal(response.status, 200);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].headers.Authorization, 'Bearer staging-test-only');
+  const mail = JSON.parse(calls[0].body);
+  assert.equal(mail.from, 'staging@wildfire.example');
+  assert.deepEqual(mail.to, ['qa1@example.invalid', 'qa2@example.invalid']);
+  assert.match(mail.subject, /^\[测试\] 【野火申请】/);
+  assert.equal(mail.reply_to, 'test@example.invalid');
+  assert.equal(mail.attachments[0].filename, 'resume.pdf');
+});
+
+test('missing or invalid staging email settings never fall back to production', async () => {
+  for (const overrides of [
+    { STAGING_EMAIL_API_KEY: undefined }, { STAGING_EMAIL_FROM: undefined },
+    { STAGING_APPLY_TO_EMAILS: undefined }, { STAGING_APPLY_TO_EMAILS: 'qa1@example.invalid, invalid' },
+  ]) {
+    let sent = false;
+    const response = await handleApply(request(), { ...stagingEnvironment(), ...overrides }, {
+      ...options, fetcher: async () => { sent = true; return successful(); },
+    });
+    assert.equal(response.status, 502);
+    assert.equal((await response.json()).ok, false);
+    assert.equal(sent, false);
+  }
+});
+
 test('open project uses its name in email and accepts every catalog role without project filtering', async () => {
   const body = form(); body.set('project', 'wildfire'); body.delete('role');
   body.append('role', 'social'); body.append('role', 'data');
