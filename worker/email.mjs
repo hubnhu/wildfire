@@ -27,16 +27,21 @@ export function formatApplicationEmail(application, version, now = new Date()) {
 }
 
 export async function sendApplicationEmail(application, version, env, fetcher = fetch, now = new Date()) {
-  if (env.EMAIL_PROVIDER !== 'resend' || !env.EMAIL_API_KEY || !env.EMAIL_FROM || !env.APPLY_TO_EMAIL) throw new Error('email_not_configured');
+  const staging = env.STAGING === '1';
+  const apiKey = staging ? env.STAGING_EMAIL_API_KEY : env.EMAIL_API_KEY;
+  const from = staging ? env.STAGING_EMAIL_FROM : env.EMAIL_FROM;
+  const to = staging ? [...new Set((env.STAGING_APPLY_TO_EMAILS ?? '').split(',').map((address) => address.trim()))] : [env.APPLY_TO_EMAIL ?? ''];
+  if (env.EMAIL_PROVIDER !== 'resend' || !apiKey || !from || to.length > 50 || to.some((address) => !replyEmailPattern.test(address))) throw new Error('email_not_configured');
   const message = formatApplicationEmail(application, version, now);
+  if (staging) message.subject = `[测试] ${message.subject}`;
   const content = Buffer.from(await application.resume.arrayBuffer()).toString('base64');
   const extension = application.resume.name.split('.').pop().toLowerCase();
   const contentType = { pdf: 'application/pdf', doc: 'application/msword', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }[extension];
   const response = await fetcher('https://api.resend.com/emails', {
     method: 'POST',
-    headers: { Authorization: `Bearer ${env.EMAIL_API_KEY}`, 'Content-Type': 'application/json' },
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      from: env.EMAIL_FROM, to: [env.APPLY_TO_EMAIL], ...message,
+      from, to, ...message,
       ...(replyEmailPattern.test(application.contact) ? { reply_to: application.contact } : {}),
       attachments: [{ filename: application.resume.name, content, content_type: contentType }],
     }),

@@ -2,9 +2,9 @@
 
 ## 自动部署
 
-公开仓库 [hubnhu/wildfire](https://github.com/hubnhu/wildfire) 的 main 是发布分支。贡献者经 PR 合入，维护者负责发布；Cloudflare Workers Builds 安装锁定依赖，运行 `npm run build:ci`，再运行 `npm run deploy:ci`，以 wrangler.jsonc 更新 wildfire Worker。GitHub Actions 的 `.github/workflows/ci.yml` 只在 PR 和 main 推送上运行 `npm run build:ci`，不部署。
+公开仓库 [hubnhu/wildfire](https://github.com/hubnhu/wildfire) 的 main 是发布分支。贡献者经 PR 合入，维护者负责发布；Cloudflare Workers Builds 安装锁定依赖，运行 `npm run build:ci`，再运行 `npm run deploy:ci`，以 wrangler.jsonc 更新 wildfire Worker。GitHub Actions 的 `.github/workflows/ci.yml` 在 PR 及 main、staging 推送上运行 `npm run build:ci`，不部署。
 
-发布记录在 Git 与 Cloudflare；不因发布一次补写文档。当前状态与验证只见 [PROJECT](PROJECT.md)。
+发布记录在 Git 与 Cloudflare；当前验证见 [PROJECT](PROJECT.md)。
 
 ## 后台设置
 
@@ -25,7 +25,17 @@
 
 新仓库首次部署前必须先设置这两个 Secret，否则申请会失败。
 
-Cloudflare 的 Preview command 是必填的测试版本上传命令，不替换线上部署；使用 wrangler.jsonc 与 build:ci 生成的 dist 一致。变量含义、存放边界只见 [CONTRIBUTING](../CONTRIBUTING.md#环境变量)。非秘密运行变量由 Wrangler 配置维护。
+Preview command 只上传版本。变量与密钥见 [CONTRIBUTING](../CONTRIBUTING.md#环境变量)。
+
+## 团队测试站
+
+`wildfire-staging` 服务 `wildfire-staging.hubn.com`，公开访问，无需登录。复用正式表单，关闭索引和备用网址；邮件标题加 `[测试]`，缺测试配置不回退正式发信。
+
+统计不覆盖测试域名。首次部署后，在测试 Worker 设置[发信变量](../CONTRIBUTING.md#环境变量)。
+
+- GitHub：两分支均须 PR、负责人审批和 `build` 通过；新提交须重审。员工从 fork 提 PR。主站 PR 合并前须同步最新 main，勿把 staging 合回功能分支；影响验收时复验。
+- Cloudflare：测试 Worker 连同仓库，发布分支选 `staging`；根目录与 Build command 留空，Deploy command 填 `npm run deploy:staging`。关闭其他分支预览；如须填写 Preview command，填 `npx wrangler versions upload --env staging`。
+- 合入 staging 后自动部署；一次验收一个版本，用合成资料检查页面、移动端、申请、收件及附件。仅将已验收改动提 PR 到 main。
 
 ## 手动发布与打包检查
 
@@ -49,7 +59,7 @@ strict 差异检查失败时先核对配置，不默认去掉 strict 覆盖后�
 ## 回滚
 
 ```sh
-node scripts/wrangler.mjs rollback --config wrangler.jsonc
+node scripts/wrangler.mjs rollback --config wrangler.jsonc --env=
 ```
 
 选择已验证且配置兼容的版本。代码与静态资源一起回滚；核对当前及历史须知可访问、同意版本一致。回滚不改变 main，下次自动部署仍从 main 构建，需要同步源码修复或回退。
