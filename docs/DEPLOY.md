@@ -21,9 +21,9 @@
 | 非 main 分支构建 | 关闭 |
 | Node.js | .node-version 指定版本 |
 | 部署 Token | Cloudflare 构建生成，不提交或分享 |
-| Runtime Secret | EMAIL_API_KEY、APPLY_TO_EMAIL；不用复制到 Build Secrets |
+| 运行时发信配置 | 见 [环境变量](../CONTRIBUTING.md#环境变量)；不填 Build Secrets |
 
-新仓库首次部署前必须先设置这两个 Secret，否则申请会失败。
+申请开放前须配置发信密钥和收件邮箱。
 
 Preview command 只上传版本。变量与密钥见 [CONTRIBUTING](../CONTRIBUTING.md#环境变量)。
 
