@@ -26,5 +26,47 @@
     "EMAIL_PROVIDER": "resend",
     "EMAIL_FROM": "野火申请 <wildfire@forms.hubn.com>"
   },
-  "observability": { "enabled": false }
+  "observability": { "enabled": false },
+  "env": {
+    "staging": {
+      "name": "wildfire-staging",
+      "workers_dev": false,
+      "preview_urls": false,
+      "routes": [
+        {
+          "pattern": "wildfire-staging.hubn.com",
+          "custom_domain": true
+        }
+      ],
+      "assets": {
+        "directory": "./dist-staging",
+        "binding": "ASSETS",
+        "run_worker_first": [
+          "/api/*"
+        ],
+        "not_found_handling": "404-page",
+        "html_handling": "drop-trailing-slash"
+      },
+      "ratelimits": [
+        {
+          "name": "APPLY_RATE_LIMITER",
+          "namespace_id": "1002",
+          "simple": {
+            "limit": 5,
+            "period": 60
+          }
+        }
+      ],
+      "vars": {
+        "STAGING": "1",
+        "APPLICATIONS_CLOSED": "0",
+        "TERMS_VERSION": "2026-10-22",
+        "RESUME_MAX_MB": "5",
+        "EMAIL_PROVIDER": "resend"
+      },
+      "observability": {
+        "enabled": false
+      }
+    }
+  }
 }

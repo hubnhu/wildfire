@@ -1,8 +1,10 @@
 # 协作指南
 
-公开仓库 [hubnhu/wildfire](https://github.com/hubnhu/wildfire)。贡献者 fork 后在自己的 fork 开分支，向本仓库 main 提 PR，说明改了什么、为什么、本地跑了哪些检查；较大的改动请先开 issue 讨论。main 不接受直接推送，仅维护者（文档中称负责人，GitHub 上的 @hubnhu）能合并并发布。合入 main 会触发部署，流程见 [DEPLOY](docs/DEPLOY.md)。Node.js 版本与本地命令见 [README](README.md)；贡献不需要任何生产凭据，维护者也不会索取你的凭据。
+公开仓库 [hubnhu/wildfire](https://github.com/hubnhu/wildfire)。贡献者 fork 后在自己的 fork 开分支，向本仓库提 PR，说明改了什么、为什么、本地跑了哪些检查；较大的改动请先开 issue 讨论。staging 和 main 不接受直接推送，仅维护者（文档中称负责人，GitHub 上的 @hubnhu）能合并并发布。合入 main 会触发部署，流程见 [DEPLOY](docs/DEPLOY.md)。Node.js 版本与本地命令见 [README](README.md)；贡献不需要任何生产凭据，维护者也不会索取你的凭据。
 
 提交 PR 即表示同意你的代码贡献按 [MIT 许可证](LICENSE) 发布。网站文案、项目和发起人资料由维护者确认后更新，外部 PR 请不要改 `src/data/` 里的内容，除非 issue 里已经商定。仓库历史重建过，更早的克隆不能直接合并回来。
+
+需测试站验收的改动先向 staging 提 PR，写清页面和预期结果，负责人审批合入后自动部署；流程见[团队测试站](docs/DEPLOY.md#团队测试站)。
 
 ## 内容编辑
 
@@ -21,7 +23,7 @@
 
 1. 改正文前运行 `npm run terms:archive`，原样归档旧版。
 2. 改正文及新版本日期，不覆盖归档或重用版本。
-3. 同步 Wrangler 的 `TERMS_VERSION`，验证 `/terms/archive/{旧版本}`；旧同意版本需要重新阅读和勾选。
+3. 同步正式与测试配置的 `TERMS_VERSION`，验证 `/terms/archive/{旧版本}`；旧版本须重读并勾选。
 
 `src/data/terms/archive/.gitkeep` 必须存在：Git 不保存空目录，校验及归档测试需要该目录。
 
@@ -40,6 +42,8 @@
 | `APPLICATIONS_CLOSED` | 字符串 '1' 关闭申请，其余开放；Wrangler vars |
 | `WILDFIRE_APPLICATIONS_CLOSED` | 字符串 '1' 构建关闭申请界面；仅构建环境 |
 | `ALLOW_DRAFT` | 1 允许开发占位；仅开发构建环境 |
+
+仅测试 Worker：`STAGING_EMAIL_API_KEY` 用独立 Resend 发送密钥，`STAGING_EMAIL_FROM` 用已验证域名下的测试发件地址，`STAGING_APPLY_TO_EMAILS` 用英文逗号分隔 1–50 个测试邮箱。这三项设为 Runtime Secret，不填生产密钥或正式收件箱。
 
 ## 文件边界
 
