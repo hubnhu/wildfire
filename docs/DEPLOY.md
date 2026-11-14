@@ -33,6 +33,8 @@ Preview command 只上传版本。变量与密钥见 [CONTRIBUTING](../CONTRIBUT
 
 统计不覆盖测试域名。首次部署后，在测试 Worker 设置[发信变量](../CONTRIBUTING.md#环境变量)。
 
+测试部署保留后台变量，跳过 Wrangler 的严格差异拦截，并关闭差异日志以免打印收件名单。正式站的 CI 仍用严格检查。
+
 - GitHub：两分支均须 PR、负责人审批和 `build` 通过；新提交须重审。员工从 fork 提 PR。主站 PR 合并前须同步最新 main，勿把 staging 合回功能分支；影响验收时复验。
 - Cloudflare：测试 Worker 连同仓库，发布分支选 `staging`；根目录与 Build command 留空，Deploy command 填 `npm run deploy:staging`。关闭其他分支预览；如须填写 Preview command，填 `npx wrangler versions upload --env staging`。
 - 合入 staging 后自动部署；一次验收一个版本，用合成资料检查页面、移动端、申请、收件及附件。仅将已验收改动提 PR 到 main。

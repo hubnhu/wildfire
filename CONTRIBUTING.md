@@ -36,7 +36,7 @@
 | `EMAIL_PROVIDER` | resend；Wrangler vars |
 | `EMAIL_API_KEY` | 发信凭据；Runtime Secret |
 | `EMAIL_FROM` | 固定已验证发件人；Wrangler vars |
-| `APPLY_TO_EMAIL` | 正式站单一收件邮箱；后台运行时变量或 Secret |
+| `APPLY_TO_EMAIL` | 正式站单一收件邮箱；Runtime Secret |
 | `TERMS_VERSION` | 等于须知最后更新日期；Wrangler vars |
 | `RESUME_MAX_MB` | 与站点限制一致，5MiB；Wrangler vars |
 | `APPLICATIONS_CLOSED` | 字符串 '1' 关闭申请，其余开放；Wrangler vars |
