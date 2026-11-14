@@ -24,6 +24,6 @@
     "deploy:closed": "node scripts/deploy-closed.mjs",
     "terms:archive": "node scripts/archive-terms.mjs"
   },
-  "dependencies": { "astro": "7.3.8" },
+  "dependencies": { "astro": "7.4.7" },
   "devDependencies": { "@playwright/test": "1.64.0", "wrangler": "4.149.0" }
 }
