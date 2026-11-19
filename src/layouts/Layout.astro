@@ -3,7 +3,6 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 const { title, description, home = false, noindex = false, canonical } = Astro.props;
-const applicationsClosed = process.env.WILDFIRE_APPLICATIONS_CLOSED === '1';
 
 const siteOrigin = Astro.site ? Astro.site.origin : 'https://wildfire.hubn.com';
 const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
@@ -25,5 +24,5 @@ const canonicalUrl = canonical ?? (pathname === '/' ? `${siteOrigin}/` : `${site
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:locale" content="zh_CN" />
   </head>
-  <body><Header home={home} />{applicationsClosed && <div class="closed-notice" role="status">申请暂未开放。</div>}<main><slot /></main><Footer /></body>
+  <body><Header home={home} /><main><slot /></main><Footer /></body>
 </html>

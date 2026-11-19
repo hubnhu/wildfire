@@ -15,7 +15,6 @@
 | `npm test` | 接口与内容检查 |
 | `npm run build:draft` | 允许占位的开发构建 |
 | `npm run build:ci` | 测试与严格构建 |
-| `npm run build:closed` | 关闭申请构建 |
 | `npm run test:browser` | 页面交互、手机布局与截图 |
 | `npm run test:data-build` | 项目数量、发布过滤与须知归档场景 |
 
