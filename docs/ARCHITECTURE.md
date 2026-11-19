@@ -6,7 +6,7 @@ Astro 从 JSON 生成静态页面。`src/lib/content.mjs` 集中维护发布及�
 
 申请路径：访客 → POST /api/apply → 同源及格式检查 → 限流 → 有界读取 multipart → 蜜罐、字段和附件校验 → 须知及配置一致性 → Resend → 固定收件箱。字段与响应见 [SPEC](SPEC.md#7-申请表)，变量见 [CONTRIBUTING](../CONTRIBUTING.md#环境变量)。
 
-- 关闭模式在读取请求体前返回 503。请求必须是 POST、multipart/form-data；返回 JSON 或无 JS 的 HTML。
+- 请求必须是 POST、multipart/form-data；返回 JSON 或无 JS 的 HTML。
 - 请求流计数上限是附件限制加 128KiB，不能只信 Content-Length；multipart 和附件仍占请求内存。
 - 单文件检查扩展名、MIME 和签名；DOCX 检查 ZIP 目录里的 Word 项，不解压。这不是完整文档解析或病毒扫描。
 - Cloudflare 位置级限流每个 IP 每分钟五次，不是严格全局配额；本地服务使用进程内计数。
@@ -28,10 +28,10 @@ Astro 从 JSON 生成静态页面。`src/lib/content.mjs` 集中维护发布及�
 | 模式 | 构建 / 配置 | 边界 |
 | --- | --- | --- |
 | 开发 | build:draft；serve 或 worker:dev | 允许占位；不代表生产配置 |
-| 关闭申请 | build:closed；wrangler.closed.jsonc；dist-closed/ | 提示关闭、禁用表单、API 拒绝；不添加 noindex |
-| 开放申请 | build；wrangler.jsonc；dist/ | 严格内容检查；按产品规格接收申请 |
+| 正式 | build；wrangler.jsonc；dist/ | 严格内容检查；按产品规格接收申请 |
+| 测试站 | build:staging；wrangler.jsonc 的 staging 环境；dist-staging/ | 与正式构建相同，仅禁止索引；测试发信 |
 
-两份部署配置指向同一 Worker 和域名，关闭模式不提供访问控制。自动部署流程只在 [DEPLOY](DEPLOY.md) 维护。
+部署流程只在 [DEPLOY](DEPLOY.md) 维护。
 
 ## 为什么这样做
 

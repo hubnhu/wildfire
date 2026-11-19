@@ -39,8 +39,6 @@
 | `APPLY_TO_EMAIL` | 正式站单一收件邮箱；Runtime Secret |
 | `TERMS_VERSION` | 等于须知最后更新日期；Wrangler vars |
 | `RESUME_MAX_MB` | 与站点限制一致，5MiB；Wrangler vars |
-| `APPLICATIONS_CLOSED` | 字符串 '1' 关闭申请，其余开放；Wrangler vars |
-| `WILDFIRE_APPLICATIONS_CLOSED` | 字符串 '1' 构建关闭申请界面；仅构建环境 |
 | `ALLOW_DRAFT` | 1 允许开发占位；仅开发构建环境 |
 
 仅测试 Worker：`STAGING_EMAIL_API_KEY` 用可复用的 Resend 发送密钥，设为 Runtime Secret；`STAGING_EMAIL_FROM` 用已验证域名的发件地址，`STAGING_APPLY_TO_EMAILS` 用英文逗号分隔 1–50 个测试邮箱，均可用后台运行时变量或 Secret。

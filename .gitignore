@@ -1,11 +1,9 @@
 node_modules/
 dist/
-dist-closed/
 dist-staging/
 .astro/
 .wrangler/
 .worker-build/
-.worker-closed-build/
 .worker-staging-build/
 .env
 .env.*

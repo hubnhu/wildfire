@@ -9,8 +9,7 @@
     "dev": "astro dev --host 127.0.0.1",
     "build": "node scripts/validate-data.mjs && ASTRO_TELEMETRY_DISABLED=1 astro build && node scripts/generate-sitemap.mjs && node scripts/check-content.mjs",
     "build:draft": "ALLOW_DRAFT=1 npm run build",
-    "build:closed": "node scripts/build-closed.mjs",
-    "build:staging": "node scripts/build-closed.mjs --staging",
+    "build:staging": "node scripts/build-staging.mjs",
     "build:ci": "npm test && npm run build",
     "deploy:ci": "node scripts/wrangler.mjs deploy --config wrangler.jsonc --env= --strict",
     "serve": "npm run build:draft && node scripts/serve.mjs",
@@ -22,7 +21,6 @@
     "worker:dev": "npm run build:draft && node scripts/wrangler.mjs dev --port 8787",
     "worker:check": "node scripts/wrangler.mjs deploy --config wrangler.jsonc --env= --dry-run --outdir .worker-build",
     "deploy": "node scripts/release.mjs",
-    "deploy:closed": "node scripts/deploy-closed.mjs",
     "deploy:staging": "npm run build:staging && WRANGLER_LOG=error WRANGLER_WRITE_LOGS=false node scripts/wrangler.mjs deploy --config wrangler.jsonc --env staging --keep-vars",
     "terms:archive": "node scripts/archive-terms.mjs"
   },

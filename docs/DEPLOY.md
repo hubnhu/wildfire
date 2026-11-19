@@ -41,22 +41,20 @@ Preview command 只上传版本。变量与密钥见 [CONTRIBUTING](../CONTRIBUT
 
 ## 手动发布与打包检查
 
-维护者先确认账号、Worker 与模式；多账号通过 CLOUDFLARE_ACCOUNT_ID 指定目标，实际账号标识不写共享文档。
+维护者先确认账号、Worker 与环境；多账号通过 CLOUDFLARE_ACCOUNT_ID 指定目标，实际账号标识不写共享文档。
 
 ```sh
 node scripts/wrangler.mjs login
 node scripts/wrangler.mjs whoami
 npm run build:ci
 npm run worker:check
-npm run build:closed
-node scripts/wrangler.mjs deploy --config wrangler.closed.jsonc --dry-run --outdir .worker-closed-build
 ```
 
-`worker:check` 对 dist 做开放配置 dry-run；另一条命令打包关闭申请配置。dry-run 不发布、不验证远程配置或真实投递。Wrangler 的本地日志在忽略的 `.wrangler/logs`，统计关闭，日志不得包含密钥。
+`worker:check` 对 dist 做 dry-run。dry-run 不发布、不验证远程配置或真实投递。Wrangler 的本地日志在忽略的 `.wrangler/logs`，统计关闭，日志不得包含密钥。
 
-获准手动发布开放模式执行 `npm run deploy`，关闭模式执行 `npm run deploy:closed`。它们直接上传本机产物，不同步 GitHub。两种配置更新同一 Worker 和自定义域名；关闭申请不添加 noindex。开放发布清除开发构建变量，并做严格检查；占位由 `scripts/check-content.mjs` 阻止发布。
+获准手动发布执行 `npm run deploy`，直接上传本机产物，不同步 GitHub。发布清除开发构建变量，并做严格检查；占位由 `scripts/check-content.mjs` 阻止发布。
 
-strict 差异检查失败时先核对配置，不默认去掉 strict 覆盖后台设置。发布前核对 assets、须知版本、大小、限流与发信绑定；发布后检查各类页面、404、同域资源、HTTPS、对应申请模式及 Secret 名称，不读取密钥值。真实邮件测试需负责人授权。
+strict 差异检查失败时先核对配置，不默认去掉 strict 覆盖后台设置。发布前核对 assets、须知版本、大小、限流与发信绑定；发布后检查各类页面、404、同域资源、HTTPS、申请接口及 Secret 名称，不读取密钥值。真实邮件测试需负责人授权。
 
 ## 回滚
 
