@@ -21,9 +21,9 @@
 | 非 main 分支构建 | 关闭 |
 | Node.js | .node-version 指定版本 |
 | 部署 Token | Cloudflare 构建生成，不提交或分享 |
-| Runtime Secret | EMAIL_API_KEY、APPLY_TO_EMAIL；不用复制到 Build Secrets |
+| 运行时发信配置 | 见 [环境变量](../CONTRIBUTING.md#环境变量)；不填 Build Secrets |
 
-新仓库首次部署前必须先设置这两个 Secret，否则申请会失败。
+申请开放前须配置发信密钥和收件邮箱。
 
 Preview command 只上传版本。变量与密钥见 [CONTRIBUTING](../CONTRIBUTING.md#环境变量)。
 
@@ -32,6 +32,8 @@ Preview command 只上传版本。变量与密钥见 [CONTRIBUTING](../CONTRIBUT
 `wildfire-staging` 服务 `wildfire-staging.hubn.com`，公开访问，无需登录。复用正式表单，关闭索引和备用网址；邮件标题加 `[测试]`，缺测试配置不回退正式发信。
 
 统计不覆盖测试域名。首次部署后，在测试 Worker 设置[发信变量](../CONTRIBUTING.md#环境变量)。
+
+测试部署保留后台变量，跳过 Wrangler 的严格差异拦截，并关闭差异日志以免打印收件名单。正式站的 CI 仍用严格检查。
 
 - GitHub：两分支均须 PR、负责人审批和 `build` 通过；新提交须重审。员工从 fork 提 PR。主站 PR 合并前须同步最新 main，勿把 staging 合回功能分支；影响验收时复验。
 - Cloudflare：测试 Worker 连同仓库，发布分支选 `staging`；根目录与 Build command 留空，Deploy command 填 `npm run deploy:staging`。关闭其他分支预览；如须填写 Preview command，填 `npx wrangler versions upload --env staging`。

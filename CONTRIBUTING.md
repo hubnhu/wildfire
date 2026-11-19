@@ -29,21 +29,21 @@
 
 ## 环境变量
 
-本地复制 `.dev.vars.example` 到忽略的 `.dev.vars`，填示例值即可。发件邮箱获准共享；收件邮箱和密钥只放 Runtime Secret，不进 Git、日志、浏览器、构建产物或 `PUBLIC_` 变量。
+本地复制 `.dev.vars.example` 到忽略的 `.dev.vars`，填示例值即可。发件邮箱获准共享；收件邮箱和密钥不进 Git、日志、浏览器或构建产物。部署保留后台运行时变量（`keep_vars`）。
 
 | 名称 | 用途 / 存放位置 |
 | --- | --- |
 | `EMAIL_PROVIDER` | resend；Wrangler vars |
 | `EMAIL_API_KEY` | 发信凭据；Runtime Secret |
 | `EMAIL_FROM` | 固定已验证发件人；Wrangler vars |
-| `APPLY_TO_EMAIL` | 固定收件人；Runtime Secret |
+| `APPLY_TO_EMAIL` | 正式站单一收件邮箱；Runtime Secret |
 | `TERMS_VERSION` | 等于须知最后更新日期；Wrangler vars |
 | `RESUME_MAX_MB` | 与站点限制一致，5MiB；Wrangler vars |
 | `APPLICATIONS_CLOSED` | 字符串 '1' 关闭申请，其余开放；Wrangler vars |
 | `WILDFIRE_APPLICATIONS_CLOSED` | 字符串 '1' 构建关闭申请界面；仅构建环境 |
 | `ALLOW_DRAFT` | 1 允许开发占位；仅开发构建环境 |
 
-仅测试 Worker：`STAGING_EMAIL_API_KEY` 用独立 Resend 发送密钥，`STAGING_EMAIL_FROM` 用已验证域名下的测试发件地址，`STAGING_APPLY_TO_EMAILS` 用英文逗号分隔 1–50 个测试邮箱。这三项设为 Runtime Secret，不填生产密钥或正式收件箱。
+仅测试 Worker：`STAGING_EMAIL_API_KEY` 用可复用的 Resend 发送密钥，设为 Runtime Secret；`STAGING_EMAIL_FROM` 用已验证域名的发件地址，`STAGING_APPLY_TO_EMAILS` 用英文逗号分隔 1–50 个测试邮箱，均可用后台运行时变量或 Secret。
 
 ## 文件边界
 
