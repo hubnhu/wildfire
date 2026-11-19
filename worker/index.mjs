@@ -40,7 +40,6 @@ async function limitedFormData(request) {
 
 export async function handleApply(request, env, dependencies = {}) {
   if (request.method !== 'POST') return new Response(null, { status: 405, headers: { Allow: 'POST', 'Cache-Control': 'no-store' } });
-  if (env.APPLICATIONS_CLOSED === '1') return reply(request, 503, '申请暂未开放。');
   const origin = request.headers.get('Origin');
   const fetchSite = request.headers.get('Sec-Fetch-Site');
   if ((origin && origin !== new URL(request.url).origin) || fetchSite === 'cross-site') return reply(request, 403, FAILURE);

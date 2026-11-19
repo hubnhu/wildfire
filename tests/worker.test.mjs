@@ -28,21 +28,6 @@ const environment = () => ({
 const successful = async () => Response.json({ id: 'test-message' });
 const options = { version: VERSION, now: NOW, fetcher: successful };
 
-test('closed mode rejects submission before reading attachments or contacting email provider', async () => {
-  const incoming = request();
-  let read = false;
-  incoming.body.getReader = () => { read = true; throw new Error('closed mode must not read attachments'); };
-  let sent = false;
-  const response = await handleApply(incoming, { ...environment(), APPLICATIONS_CLOSED: '1' }, {
-    ...options, fetcher: async () => { sent = true; return successful(); },
-  });
-  assert.equal(response.status, 503);
-  assert.equal(response.headers.get('Cache-Control'), 'no-store');
-  assert.deepEqual(await response.json(), { ok: false, message: '申请暂未开放。' });
-  assert.equal(read, false);
-  assert.equal(sent, false);
-});
-
 test('successful submit creates one email with attachment, ordered fields and consent evidence', async () => {
   const calls = [];
   const response = await handleApply(request(), environment(), { ...options, fetcher: async (url, init) => { calls.push({ url, init }); return successful(); } });
