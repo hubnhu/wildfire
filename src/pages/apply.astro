@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { site, termsLabel, statusOptions, roles, applicationProjects } from '../lib/content.mjs';
+import { site, termsLabel, statusOptions, roles, applicationProjectOptions, isProjectFull } from '../lib/content.mjs';
 ---
 <Layout title="申请加入 · 野火 Wildfire" description="申请加入野火。面向在校大学生和想转行、想积攒经验的人。说说你是谁，想做什么岗位，能做什么。">
   <section class="narrow-page"><div class="container form-width stack gap-36">
@@ -14,7 +14,7 @@ import { site, termsLabel, statusOptions, roles, applicationProjects } from '../
         <div class="field"><label for="f-name">怎么称呼你</label><input class="field-control" id="f-name" name="name" type="text" required autocomplete="name" maxlength="100" /></div>
         <div class="field"><label for="f-contact">联系方式</label><div id="contact-help" class="small muted">微信号或邮箱</div><input class="field-control" id="f-contact" name="contact" type="text" required maxlength="200" aria-describedby="contact-help" /></div>
         <fieldset><legend>你现在的状态</legend><div class="choices">{Object.entries(statusOptions).map(([value, label]) => <label class="choice"><input type="radio" name="status" value={value} required />{label}</label>)}</div></fieldset>
-        <div class="field"><label for="f-project">想加入哪个项目</label><select class="field-control" id="f-project" name="project" aria-describedby="project-help"><option value="any">{site.generalApplicationLabel}</option>{applicationProjects().map((project) => <option value={project.slug}>{project.name}</option>)}</select><div id="project-help" class="small muted">{site.generalApplicationHelp}</div></div>
+        <div class="field"><label for="f-project">想加入哪个项目</label><select class="field-control" id="f-project" name="project" aria-describedby="project-help"><option value="any">{site.generalApplicationLabel}</option>{applicationProjectOptions().map((project) => <option value={project.slug} disabled={isProjectFull(project)}>{project.name}{isProjectFull(project) ? '（已满员，无法申请）' : ''}</option>)}</select><div id="project-help" class="small muted">{site.generalApplicationHelp}</div></div>
         <fieldset><legend>想做的岗位（可多选）</legend><div class="choices">{roles.map(({ id, name }) => <label class="choice"><input type="checkbox" name="role" value={id} />{name}</label>)}</div></fieldset>
         <div class="field"><label for="f-resume">简历</label><div id="resume-help" class="small muted">PDF 或 Word。单个文件，不超过 {site.resumeMaxMb}MB。</div><input class="field-control" id="f-resume" name="resume" type="file" required accept=".pdf,.doc,.docx" aria-describedby="resume-help" /></div>
         <div class="field"><label for="f-time">每周大概能投入多少时间</label><div id="time-help" class="small muted">没有硬性要求，如实写就行。</div><input class="field-control" id="f-time" name="time" type="text" required maxlength="200" aria-describedby="time-help" /></div>

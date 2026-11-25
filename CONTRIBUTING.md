@@ -13,7 +13,8 @@
 - 加岗位：在 `src/data/roles.json` 追加唯一 id 和名称，数组顺序决定表单顺序，项目仅引用 id。
 - 加发起人：在 `src/data/initiators.json` 填唯一 slug、姓名、简介及 bio 段落；至少有一个已发布项目才生成专页。首页发起人由 `src/data/site.json` 的 founder 指定。
 - 发起人可选 `links: [{ "label": "博客", "url": "https://..." }]`。
-- 加项目：在 `src/data/projects.json` 填 [SPEC](docs/SPEC.md#5-内容数据) 字段，引用存在的发起人和岗位；详情岗位须有说明。published 控制展示，acceptingApplications 为 true 且 published 才进入申请下拉。slug 发布后不要改。
+- 加项目：在 `src/data/projects.json` 填 [SPEC](docs/SPEC.md#5-内容数据) 字段，引用存在的发起人和岗位；详情岗位须有说明。published 控制展示，acceptingApplications 控制手动开放申请；满员项目保留为不可选项，接口不接受。slug 发布后不要改。
+- 更新人数：独立维护项目 `memberCount`（含未分配岗位成员）和各岗位 `filledCount`、`requiredCount`。统计规则、默认值与空岗位处理见 [SPEC](docs/SPEC.md#52-项目)；改完运行数据检查并重新构建部署。
 - 站点大小变化同步 `RESUME_MAX_MB`；公共协作条目在 `src/data/collaboration.json`，按稳定 id 替换说明。
 - 未确认占位由 `scripts/check-content.mjs` 阻止发布。
 

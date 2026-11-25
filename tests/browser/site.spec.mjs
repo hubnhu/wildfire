@@ -117,6 +117,22 @@ test('second initiator and project follow data order without changing the site f
   await expect(page.locator('#f-project')).toHaveValue('stadium');
 });
 
+test('project cards show independent participants, role counts and recruitment labels at narrow widths', async ({ page }) => {
+  for (const width of [320, 390, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    const cards = page.locator('.project-card');
+    await expect(cards).toHaveCount(5);
+    for (const card of await cards.all()) {
+      await expect(card.locator('.project-members')).toHaveText('已有 0 人加入');
+      await expect(card.locator('.status')).toHaveClass(/status-recruiting/);
+      await expect(card.locator('.status')).toContainText('招募中');
+      for (const text of await card.locator('.recruitment-role').allTextContents()) expect(text).toMatch(/（0\/4）$/);
+      expect(await card.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+    }
+  }
+});
+
 test('Chinese client validation prevents missing, wrong files, oversized files and no consent', async ({ page }) => {
   const posts = [];
   page.on('request', (request) => { if (request.method() === 'POST') posts.push(request.url()); });
@@ -227,7 +243,10 @@ test('capture desktop and mobile screenshots for visual inspection', async ({ pa
       await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
     }
     await page.screenshot({ path: `artifacts/screenshots/${name}-mobile.png`, fullPage: true });
-    if (route === '/') await page.screenshot({ path: 'artifacts/screenshots/home-mobile-first.png' });
+    if (route === '/') {
+      await page.screenshot({ path: 'artifacts/screenshots/home-mobile-first.png' });
+      await page.locator('#projects').screenshot({ path: 'artifacts/screenshots/recruitment-mobile.png' });
+    }
   }
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto('/');
@@ -236,6 +255,7 @@ test('capture desktop and mobile screenshots for visual inspection', async ({ pa
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
   await page.screenshot({ path: 'artifacts/screenshots/home-desktop.png', fullPage: true });
   await page.screenshot({ path: 'artifacts/screenshots/home-desktop-first.png' });
+  await page.locator('#projects').screenshot({ path: 'artifacts/screenshots/recruitment-desktop.png' });
   await page.goto('/projects/wildfire');
   await page.screenshot({ path: 'artifacts/screenshots/wildfire-desktop.png', fullPage: true });
 });

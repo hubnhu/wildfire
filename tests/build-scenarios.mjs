@@ -37,7 +37,7 @@ try {
   });
   const chrome = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
   browser = await chromium.launch(existsSync(chrome) ? { executablePath: chrome } : {});
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
+  const page = await browser.newPage({ baseURL: 'http://127.0.0.1:4322', viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
   const scenarios = [
     ['unpublished-fixture', [...projects, { ...projects[0], slug: 'unpublished-example', name: '未发布测试项目', published: false, acceptingApplications: false }], projects.length],
     ['hide-point', projects.map((project) => ({ ...project, published: project.slug === 'point' ? false : project.published, acceptingApplications: project.slug === 'point' ? false : project.acceptingApplications })), projects.length - 1],
@@ -106,7 +106,7 @@ try {
   const home = await read('index.html');
   assert.equal((home.match(/class="project-card"/g) || []).length, projects.length + 1);
   assert(home.includes(`data-count>${projects.length + 1}</span>`));
-  assert(home.includes('测试开放项目') && home.includes('需要</dt><dd>测试岗位'));
+  assert(home.includes('测试开放项目') && home.includes('测试岗位（0/4）'));
   assert(home.includes('<h2>测试发起人</h2>'));
   const initiator = await read(`initiators/${newInitiator.slug}/index.html`);
   assert(initiator.includes('测试发起人') && initiator.includes('/projects/synthetic-project'));
@@ -129,6 +129,69 @@ try {
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `data-only addition overflows ${route}`);
   }
   console.log('PASS data-only addition: founder, role, project, pages, options and backend/email name');
+
+  // Build real pages from synthetic recruitment data, then exercise both JS and no-JS paths.
+  const jsPage = await browser.newPage({ baseURL: 'http://127.0.0.1:4322', viewport: { width: 390, height: 844 } });
+  newProject.memberCount = 12;
+  newProject.roles[0].filledCount = 5;
+  newProject.roles[0].requiredCount = 4;
+  await writeFile(projectPath, JSON.stringify(data)); build();
+  await page.goto('/');
+  const recruitmentCard = page.locator('[data-project="synthetic-project"]');
+  assert.equal(await recruitmentCard.locator('.status').textContent(), '已上线 · 已满员');
+  assert.equal(await recruitmentCard.locator('.status').evaluate((element) => getComputedStyle(element).backgroundColor), 'rgb(92, 95, 84)');
+  assert.equal((await recruitmentCard.locator('.project-members').textContent()).trim(), '已有 12 人加入');
+  assert((await recruitmentCard.textContent()).includes('测试岗位（5/4）'));
+  await recruitmentCard.screenshot({ path: 'artifacts/screenshots/recruitment-full-example.png' });
+  for (const applicationPage of [page, jsPage]) {
+    await applicationPage.goto('/apply?project=synthetic-project');
+    const option = applicationPage.locator('option[value="synthetic-project"]');
+    assert.equal(await option.textContent(), '测试开放项目（已满员，无法申请）');
+    assert.equal(await option.isDisabled(), true);
+    assert.equal(await applicationPage.locator('#f-project').inputValue(), 'any');
+  }
+  await page.goto('/projects/synthetic-project');
+  assert.equal(await page.locator('.button-row a').getAttribute('href'), '/apply');
+  checkApplication(newProject.slug, newRole.id, 400, newProject.name);
+  let posts = 0;
+  await jsPage.route('**/api/apply', async (route) => { posts++; await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' }); });
+  await jsPage.locator('#f-name').fill('合成测试');
+  await jsPage.locator('#f-contact').fill('synthetic@example.invalid');
+  await jsPage.locator('[name=status][value=student]').check();
+  await jsPage.locator('#f-time').fill('测试投入');
+  await jsPage.locator('#f-resume').setInputFiles({ name: 'synthetic.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4\n') });
+  await jsPage.locator('#f-tos').check();
+  await jsPage.locator('#f-project').evaluate((select) => { select.value = 'synthetic-project'; });
+  await jsPage.locator('[type=submit]').click();
+  assert.equal(await jsPage.locator('#form-error').textContent(), '这个项目已满员，请重新选择。');
+  assert.equal(posts, 0);
+  console.log('PASS full project: overfilled counts, independent members, gray label, disabled option, preselection and API rejection');
+
+  const allFull = data.map((project) => ({ ...project, roles: project.roles.map((role) => ({ ...role, filledCount: 4, requiredCount: 4 })) }));
+  await writeFile(projectPath, JSON.stringify(allFull)); build();
+  await page.goto('/');
+  assert.equal(await page.locator('.project-card .status-full').count(), allFull.length);
+  assert.deepEqual(await page.locator('.project-card .status').allTextContents(), allFull.map((project) => `${project.status} · 已满员`));
+  for (const link of await page.getByRole('link', { name: '申请加入', exact: true }).all()) assert.equal(await link.getAttribute('href'), '/apply');
+  await page.goto('/apply');
+  assert.equal(await page.locator('#f-project option:disabled').count(), allFull.length);
+  assert.equal(await page.locator('option[value=any]').isEnabled(), true);
+  checkApplication('any', newRole.id, 200, site.generalApplicationLabel);
+  console.log('PASS all full: global application links and general application remain available');
+
+  newProject.roles[0].filledCount = 3;
+  await writeFile(projectPath, JSON.stringify(data)); build();
+  await page.goto('/');
+  assert.equal(await recruitmentCard.locator('.status').textContent(), '已上线 · 招募中');
+  assert.equal(await recruitmentCard.locator('.status').evaluate((element) => getComputedStyle(element).backgroundColor), 'rgb(255, 106, 43)');
+  assert.equal(await recruitmentCard.locator('.status').evaluate((element) => element.scrollWidth <= element.clientWidth), true);
+  await jsPage.goto('/apply?project=synthetic-project');
+  assert.equal(await jsPage.locator('#f-project').inputValue(), 'synthetic-project');
+  assert.equal(await jsPage.locator('option[value="synthetic-project"]').isEnabled(), true);
+  checkApplication(newProject.slug, newRole.id, 200, newProject.name);
+  await jsPage.close();
+  console.log('PASS reopened project: card, option, preselection and backend update together');
+
   newProject.acceptingApplications = false;
   await writeFile(projectPath, JSON.stringify(data)); build();
   assert(!(await read('apply/index.html')).includes('value="synthetic-project"'));
@@ -150,6 +213,9 @@ try {
     [projectPath, projects.map((item, i) => i === 0 ? { ...item, initiator: 'missing-founder' } : item), '发起人不存在'],
     [projectPath, projects.map((item) => item.hasDetailPage ? { ...item, roles: item.roles.map(({ role }) => ({ role })) } : item), '详情页岗位需要说明'],
     [projectPath, projects.map((item, i) => i === 0 ? { ...item, published: false, acceptingApplications: true } : item), '开放申请的项目必须发布'],
+    [projectPath, projects.map((item, i) => i === 0 ? { ...item, memberCount: -1 } : item), 'memberCount 必须为非负安全整数'],
+    [projectPath, projects.map((item, i) => i === 0 ? { ...item, roles: item.roles.map((role) => ({ ...role, filledCount: '4' })) } : item), 'filledCount 必须为非负安全整数'],
+    [projectPath, projects.map((item, i) => i === 0 ? { ...item, roles: item.roles.map((role) => ({ ...role, requiredCount: 1.5 })) } : item), 'requiredCount 必须为非负安全整数'],
     [sitePath, { ...site, founder: 'missing-founder' }, '站点发起人不存在'],
   ];
   const originals = new Map([[initiatorPath, originalInitiators], [projectPath, originalProjects], [rolePath, originalRoles], [sitePath, originalSite]]);

@@ -137,6 +137,27 @@ test('email aliases can be replied to without changing the fixed sender or recei
   assert.deepEqual(mail.to, [environment().APPLY_TO_EMAIL]);
 });
 
+test('full projects reject direct POSTs without email while general applications remain open', async () => {
+  const originalRoles = projects.map((project) => project.roles);
+  let sent = 0;
+  const dependencies = { ...options, fetcher: async () => { sent++; return successful(); } };
+  try {
+    for (const project of projects) project.roles = project.roles.map((role) => ({ ...role, filledCount: 5, requiredCount: 4 }));
+    const body = form(); body.set('project', 'wildfire');
+    const rejected = await handleApply(request(body), environment(), dependencies);
+    assert.equal(rejected.status, 400);
+    assert.equal((await rejected.json()).message, '这个项目暂未开放申请，请重新选择。');
+    assert.equal(sent, 0);
+    assert.equal((await handleApply(request(), environment(), dependencies)).status, 200);
+    assert.equal(sent, 1);
+    projects[0].roles[0].filledCount = 3;
+    assert.equal((await handleApply(request(body), environment(), dependencies)).status, 200);
+    assert.equal(sent, 2);
+  } finally {
+    projects.forEach((project, index) => { project.roles = originalRoles[index]; });
+  }
+});
+
 test('WeChat IDs and free text remain valid contacts without becoming reply headers', async () => {
   for (const contact of ['wechat_test', '邮箱：test@example.invalid', 'test@example.invalid, other@example.invalid', 'Applicant <test@example.invalid>', 'test..name@example.invalid']) {
     const body = form(); body.set('contact', contact);
