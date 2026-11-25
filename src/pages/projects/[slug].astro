@@ -1,12 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { publishedProjects, initiators, roleNames } from '../../lib/content.mjs';
+import { publishedProjects, initiators, roleNames, canApplyToProject } from '../../lib/content.mjs';
 export function getStaticPaths() {
   return publishedProjects().filter((project) => project.hasDetailPage).map((project) => ({ params: { slug: project.slug }, props: { project } }));
 }
 const { project } = Astro.props;
 const initiator = initiators.find((item) => item.slug === project.initiator);
-const applyUrl = project.acceptingApplications ? `/apply?project=${project.slug}` : '/apply';
+const applyUrl = canApplyToProject(project) ? `/apply?project=${project.slug}` : '/apply';
 ---
 <Layout title={`${project.name} · 野火项目详情`} description={`${project.name}：${project.oneLiner} 野火共创项目，面向在校大学生与想转行的人，由发起人亲自带。`}>
   <section class="detail-hero"><div class="container stack gap-24">

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
-import { projects, initiators, terms, site, roles, roleNames, collaboration } from '../src/lib/content.mjs';
+import { projects, initiators, terms, site, roles, roleNames, collaboration, validateRecruitmentData } from '../src/lib/content.mjs';
 
 const slug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 for (const items of [projects, initiators]) {
@@ -28,6 +28,7 @@ for (const project of projects) {
   assert(!project.acceptingApplications || project.published, '开放申请的项目必须发布');
   assert(!project.initiator || initiators.some((item) => item.slug === project.initiator), '发起人不存在');
   assert(Array.isArray(project.roles) && project.roles.every((item) => Object.hasOwn(roleNames, item.role)), '项目岗位不存在');
+  validateRecruitmentData(project);
   for (const key of ['name', 'oneLiner', 'collaboration']) assert(typeof project[key] === 'string' && project[key]);
   if (project.hasDetailPage) {
     assert(project.about.length && project.progress.length && project.roles.length, '详情页需要内容');

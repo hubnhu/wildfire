@@ -5,7 +5,7 @@ if (form) {
   const resume = form.querySelector<HTMLInputElement>('[name="resume"]')!;
   const submit = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
   const requestedProject = new URLSearchParams(location.search).get('project');
-  if (requestedProject && [...project.options].some((option) => option.value === requestedProject)) project.value = requestedProject;
+  if (requestedProject && [...project.options].some((option) => option.value === requestedProject && !option.disabled)) project.value = requestedProject;
   // Custom validation ensures Chinese feedback regardless of the browser locale.
   form.noValidate = true;
   let pending = false;
@@ -28,6 +28,7 @@ if (form) {
       if (!field.value.trim()) { showError(message, field); return; }
     }
     if (!form.querySelector('[name="status"]:checked')) { showError('请选择你现在的状态。', form.querySelector<HTMLElement>('[name="status"]')!); return; }
+    if (project.selectedOptions[0]?.disabled) { showError('这个项目已满员，请重新选择。', project); return; }
     const file = resume.files?.[0];
     if (!file || file.size === 0) { showError('请选择简历文件。', resume); return; }
     if (!/\.(pdf|doc|docx)$/i.test(file.name)) { showError('简历只支持 PDF、DOC 或 DOCX。', resume); return; }
