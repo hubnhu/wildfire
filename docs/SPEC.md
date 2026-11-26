@@ -80,7 +80,7 @@
 | 字段 | 说明 |
 | --- | --- |
 | `slug`、`name`、`oneLiner` | 路径、名称及卡片/详情简介 |
-| `status` | 想法、开发中、已上线、在营业务、筹备中 |
+| `status` | 开发中、已上线 |
 | `profitPotential` | 暂无、低、中、高、未知 |
 | `roles` | 有序数组 `{ role: 岗位id, description?: 说明 }`；岗位须存在，有详情页时每项说明必填 |
 | `rolesHeading` | 可选岗位区标题 |

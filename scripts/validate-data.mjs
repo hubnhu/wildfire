@@ -18,7 +18,7 @@ for (const role of roles) assert(slug.test(role.id) && typeof role.name === 'str
 assert(initiators.some((item) => item.slug === site.founder), '站点发起人不存在');
 assert.equal(new Set(collaboration.map((item) => item.id)).size, collaboration.length, '协作条目 id 不得重复');
 for (const project of projects) {
-  assert(['想法', '开发中', '已上线', '在营业务', '筹备中'].includes(project.status), '无效项目状态');
+  assert(['开发中', '已上线'].includes(project.status), '无效项目状态');
   assert(['暂无', '低', '中', '高', '未知'].includes(project.profitPotential), '无效盈利可能');
   assert(['cocreate', 'company'].includes(project.mode), '无效项目模式');
   assert.equal(typeof project.published, 'boolean');
