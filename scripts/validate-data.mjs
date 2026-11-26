@@ -24,8 +24,6 @@ for (const project of projects) {
   assert.equal(typeof project.published, 'boolean');
   assert.equal(typeof project.hasDetailPage, 'boolean');
   assert(!project.published || project.initiator, '已发布项目必须有发起人');
-  assert.equal(typeof project.acceptingApplications, 'boolean', '申请开关必须为布尔值');
-  assert(!project.acceptingApplications || project.published, '开放申请的项目必须发布');
   assert(!project.initiator || initiators.some((item) => item.slug === project.initiator), '发起人不存在');
   assert(Array.isArray(project.roles) && project.roles.every((item) => Object.hasOwn(roleNames, item.role)), '项目岗位不存在');
   for (const key of ['name', 'oneLiner', 'collaboration']) assert(typeof project[key] === 'string' && project[key]);

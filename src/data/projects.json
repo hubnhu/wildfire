@@ -39,8 +39,7 @@
         "description": "把野火的理念、项目和共创过程整理成适合发布的内容，参与选题、写作、发布和评论互动，帮助有兴趣的人了解并找到野火。需要愿意了解项目本身，表达清楚，并根据反馈持续调整内容。"
       }
     ],
-    "externalUrl": "",
-    "acceptingApplications": true
+    "externalUrl": ""
   },
   {
     "slug": "stadium",
@@ -53,7 +52,6 @@
     "initiator": "ma",
     "published": true,
     "hasDetailPage": true,
-    "acceptingApplications": true,
     "externalUrl": "",
     "about": [
       "Stadium 是一个开源的在线足球游戏，玩法类似 HaxBall：俯视视角，几个人进同一个房间，用小球员把球踢进对方球门，规则简单，上手只要一分钟。",
@@ -121,8 +119,7 @@
         "description": "把产品和设计的想法变成能用的功能，并保证它稳定、好维护。需要有基本的编程能力，愿意读懂已有代码，把一个任务从实现推进到稳定可用，并做好测试与上线验证。"
       }
     ],
-    "externalUrl": "",
-    "acceptingApplications": true
+    "externalUrl": ""
   },
   {
     "slug": "point",
@@ -159,8 +156,7 @@
         "description": "在现有产品上完成小而完整的功能改进，处理输入、计算、登录和数据保存中出现的问题，并做好测试与上线验证。项目使用 HTML、CSS、JavaScript、Cloudflare 和 Supabase。\n\n需要有基本的编程能力，愿意读懂已有代码，把一个任务从实现推进到稳定可用。后续如果确定了新的产品方向，也可以一起讨论技术方案，逐步扩展现有工具。"
       }
     ],
-    "externalUrl": "",
-    "acceptingApplications": true
+    "externalUrl": ""
   },
   {
     "slug": "holdem-manager",
@@ -199,7 +195,6 @@
         "description": "把产品和设计的想法变成能用的功能，并保证它稳定、好维护。技术栈很轻，适合想完整走一遍真实产品从登录、权限到实时同步的人。不熟悉的部分也可以在这里学。"
       }
     ],
-    "externalUrl": "",
-    "acceptingApplications": true
+    "externalUrl": ""
   }
 ]

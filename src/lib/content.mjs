@@ -12,5 +12,5 @@ export const termsVersion = terms.version;
 export const termsLabel = termsVersion || site.termsDraftLabel;
 export const statusOptions = { student: '在校学生', switch: '已经工作，想转行', other: '其他' };
 export const roleNames = Object.fromEntries(roles.map(({ id, name }) => [id, name]));
-export const applicationProjects = (items = projects) => publishedProjects(items).filter((project) => project.acceptingApplications);
+export const applicationProjects = (items = projects) => publishedProjects(items);
 export const founder = initiators.find((initiator) => initiator.slug === site.founder);

@@ -105,20 +105,18 @@ for (const [slug, name] of [['point', 'Point'], ['holdem-manager', 'Holdem Manag
   assert.deepEqual(mail.to, [environment().APPLY_TO_EMAIL]);
 });
 
-test('closed or unpublished project never sends and invalid roles use the requested message', async () => {
+test('unpublished project never sends and invalid roles use the requested message', async () => {
   const project = projects.find((item) => item.slug === 'wildfire');
-  for (const field of ['acceptingApplications', 'published']) {
-    const previous = project[field];
-    try {
-      project[field] = false;
-      const body = form(); body.set('project', project.slug);
-      let sent = false;
-      const response = await handleApply(request(body), environment(), { ...options, fetcher: async () => { sent = true; return successful(); } });
-      assert.equal(response.status, 400);
-      assert.equal((await response.json()).message, '这个项目暂未开放申请，请重新选择。');
-      assert.equal(sent, false);
-    } finally { project[field] = previous; }
-  }
+  const previous = project.published;
+  try {
+    project.published = false;
+    const body = form(); body.set('project', project.slug);
+    let sent = false;
+    const response = await handleApply(request(body), environment(), { ...options, fetcher: async () => { sent = true; return successful(); } });
+    assert.equal(response.status, 400);
+    assert.equal((await response.json()).message, '这个项目暂未开放申请，请重新选择。');
+    assert.equal(sent, false);
+  } finally { project.published = previous; }
   for (const role of ['ops', 'growth', '__proto__', 'unknown']) {
     const body = form(); body.set('role', role);
     const response = await handleApply(request(body), environment(), options);
@@ -251,9 +249,9 @@ test('no-JavaScript success displays the same receipt copy as the application pa
 });
 
 test('unpublished projects are excluded from project displays and direct applications', async () => {
-  const items = [{ slug: 'unpublished-example', initiator: 'bai', published: false, acceptingApplications: true }, { slug: 'b', initiator: 'bai', published: true, acceptingApplications: false }];
+  const items = [{ slug: 'unpublished-example', initiator: 'bai', published: false }, { slug: 'b', initiator: 'bai', published: true }];
   assert.deepEqual(publishedProjects(items).map((item) => item.slug), ['b']);
-  assert.deepEqual(applicationProjects(items), []);
+  assert.deepEqual(applicationProjects(items).map((item) => item.slug), ['b']);
   assert.deepEqual(initiatorProjects('bai', items).map((item) => item.slug), ['b']);
   const body = form(); body.set('project', 'unpublished-example');
   await assert.rejects(validateApplication(body), /这个项目暂未开放申请，请重新选择。/);
