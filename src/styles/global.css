@@ -188,9 +188,16 @@ legend { padding: 0; margin-bottom: 8px; }
 
 .community-members {
   margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: var(--accent);
   font-size: 15px;
   font-weight: 700;
+}
+
+.community-members svg {
+  flex-shrink: 0;
 }
 
 .project-title-row {

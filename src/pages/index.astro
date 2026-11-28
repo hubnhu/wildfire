@@ -52,7 +52,22 @@ const steps = [
       <div class="eyebrow muted">项目工作室 · 由发起人亲自把关</div>
       <h1><span class="hero-line">真项目，缺人做。</span><span class="hero-line">想做事的人，缺机会。</span></h1>
       <p class="hero-copy">野火把这两边放到一起。你加入一个真实的项目，由发起人亲自带，做出来的东西是真的，能写进简历。不收费，也没有工资。</p>
-      <p class="community-members"> 已有 {totalMembers} 人加入野火</p>
+      <p class="community-members">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        aria-hidden="true"
+      >
+        <circle cx="9" cy="7" r="3" />
+        <path d="M3 21v-3a6 6 0 0 1 12 0v3M16 4a3 3 0 0 1 0 6M21 21v-3a6 6 0 0 0-4-5.65" />
+      </svg>
+
+      <span>已有 {totalMembers} 人加入野火</span>
+      </p>
       <div class="button-row"><a href="/apply" class="button">申请加入</a><a href="#projects" class="button button-outline">看看在做的项目</a></div>
     </div>
   </section>
@@ -81,7 +96,25 @@ const steps = [
   <section id="projects">
     <div class="container stack gap-36">
       <div class="section-heading">
-        <div class="stack"><div class="eyebrow">项目</div><h2>正在做的项目</h2><p class ="community-members">已有{totalMembers}人参与</p> </div>
+        <div class="stack"><div class="eyebrow">项目</div><div class="project-title-row">
+          <h2>正在做的项目</h2>
+          <p class="community-members">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <circle cx="9" cy="7" r="3" />
+              <path d="M3 21v-3a6 6 0 0 1 12 0v3M16 4a3 3 0 0 1 0 6M21 21v-3a6 6 0 0 0-4-5.65" />
+            </svg>
+
+            <span>已有 {totalMembers} 人参与</span>
+            </p>
+          </div></div>
         <div class="project-controls"><span>共 <span data-count>{projects.length}</span> 个，左右拖动查看</span>
           <button type="button" class="arrow-button" aria-label="上一个项目" data-step="-1" aria-controls="project-scroller"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></button>
           <button type="button" class="arrow-button" aria-label="下一个项目" data-step="1" aria-controls="project-scroller"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></button>
