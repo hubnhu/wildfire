@@ -1,6 +1,6 @@
 # 协作指南
 
-公开仓库 [hubnhu/wildfire](https://github.com/hubnhu/wildfire)。贡献者 fork 后在自己的 fork 开分支，向本仓库提 PR，说明改了什么、为什么、本地跑了哪些检查；较大的改动请先开 issue 讨论。staging 和 main 不接受直接推送，仅维护者（文档中称负责人，GitHub 上的 @hubnhu）能合并并发布。合入 main 会触发部署，流程见 [DEPLOY](docs/DEPLOY.md)。Node.js 版本与本地命令见 [README](README.md)；贡献不需要任何生产凭据，维护者也不会索取你的凭据。
+公开仓库 [hubnhu/wildfire](https://github.com/hubnhu/wildfire)。贡献者 fork 后在自己的 fork 开分支，向本仓库的 staging 分支（默认分支）提 PR，说明改了什么、为什么、本地跑了哪些检查；较大的改动请先开 issue 讨论。staging 和 main 不接受直接推送，仅维护者（文档中称负责人，GitHub 上的 @hubnhu）能合并并发布。合入 staging 后部署到测试站，负责人验收通过后再合入 main 发布正式站，流程见 [DEPLOY](docs/DEPLOY.md)。Node.js 版本与本地命令见 [README](README.md)；贡献不需要任何生产凭据，维护者也不会索取你的凭据。
 
 提交 PR 即表示同意你的代码贡献按 [MIT 许可证](LICENSE) 发布。网站文案、项目和发起人资料由维护者确认后更新，外部 PR 请不要改 `src/data/` 里的内容，除非 issue 里已经商定。仓库历史重建过，更早的克隆不能直接合并回来。
 
