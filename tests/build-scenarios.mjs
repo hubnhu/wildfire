@@ -26,6 +26,15 @@ const build = () => {
   if (result.status !== 0) throw new Error(result.stdout + result.stderr);
 };
 const read = (path) => readFile(`dist/${path}`, 'utf8');
+const checkParticipantTotals = async (page, data) => {
+  const expectedTotal = data.filter((project) => project.published).reduce((sum, project) => sum + (project.memberCount ?? 0), 0);
+  assert.equal(await page.locator('.community-members').count(), 2);
+  assert.equal(await page.locator('#top .community-members svg').count(), 1);
+  assert.equal(await page.locator('#projects .community-members svg').count(), 1);
+  assert.equal((await page.locator('#top .community-members').textContent()).trim(), `已有 ${expectedTotal} 人加入野火`);
+  assert.equal((await page.locator('#projects .community-members').textContent()).trim(), `已有 ${expectedTotal} 人参与`);
+  assert.equal(await page.locator('.project-card .project-members').count(), 0);
+};
 let server;
 let browser;
 try {
@@ -65,6 +74,7 @@ try {
     }
     for (const path of ['/', '/apply', '/initiators/bai']) {
       await page.goto(`http://127.0.0.1:4322${path}`);
+      if (path === '/') await checkParticipantTotals(page, data);
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${label} overflows ${path}`);
     }
     console.log(`PASS ${label}: cards/count/options/initiator and 390px layout`);
@@ -140,7 +150,7 @@ try {
   const recruitmentCard = page.locator('[data-project="synthetic-project"]');
   assert.equal(await recruitmentCard.locator('.status').textContent(), '已上线 · 已满员');
   assert.equal(await recruitmentCard.locator('.status').evaluate((element) => getComputedStyle(element).backgroundColor), 'rgb(92, 95, 84)');
-  assert.equal((await recruitmentCard.locator('.project-members').textContent()).trim(), '已有 12 人加入');
+  await checkParticipantTotals(page, data);
   assert((await recruitmentCard.textContent()).includes('测试岗位（5/4）'));
   await recruitmentCard.screenshot({ path: 'artifacts/screenshots/recruitment-full-example.png' });
   for (const applicationPage of [page, jsPage]) {

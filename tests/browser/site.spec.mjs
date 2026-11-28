@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
+import projects from '../../src/data/projects.json' with { type: 'json' };
+import roles from '../../src/data/roles.json' with { type: 'json' };
 
 const routes = ['/', '/projects/stadium', '/initiators/ma', '/projects/point', '/projects/wildfire', '/projects/holdem-manager', '/projects/taste', '/initiators/bai', '/apply', '/terms'];
 const pdf = { name: 'resume.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4\n1 0 obj\n<<>>\nendobj\n%%EOF') };
@@ -117,19 +119,33 @@ test('second initiator and project follow data order without changing the site f
   await expect(page.locator('#f-project')).toHaveValue('stadium');
 });
 
-test('project cards show independent participants, role counts and recruitment labels at narrow widths', async ({ page }) => {
+test('homepage participant totals, icons and project cards follow data at narrow widths', async ({ page }) => {
+  const published = projects.filter((project) => project.published);
+  const expectedTotal = published.reduce((sum, project) => sum + (project.memberCount ?? 0), 0);
+  const roleNames = Object.fromEntries(roles.map(({ id, name }) => [id, name]));
   for (const width of [320, 390, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('/');
+    await expect(page.locator('.community-members')).toHaveCount(2);
+    await expect(page.locator('#top .community-members')).toHaveText(`已有 ${expectedTotal} 人加入野火`);
+    await expect(page.locator('#projects .community-members')).toHaveText(`已有 ${expectedTotal} 人参与`);
+    for (const counter of await page.locator('.community-members').all()) {
+      await expect(counter).toBeVisible();
+      await expect(counter.locator('svg')).toHaveCount(1);
+      await expect(counter.locator('svg')).toBeVisible();
+    }
     const cards = page.locator('.project-card');
-    await expect(cards).toHaveCount(5);
-    for (const card of await cards.all()) {
-      await expect(card.locator('.project-members')).toHaveText('已有 0 人加入');
-      await expect(card.locator('.status')).toHaveClass(/status-recruiting/);
-      await expect(card.locator('.status')).toContainText('招募中');
-      for (const text of await card.locator('.recruitment-role').allTextContents()) expect(text).toMatch(/（0\/4）$/);
+    await expect(cards).toHaveCount(published.length);
+    for (const project of published) {
+      const card = page.locator(`[data-project="${project.slug}"]`);
+      await expect(card.locator('.project-members')).toHaveCount(0);
+      const full = project.roles.length > 0 && project.roles.every((position) => (position.filledCount ?? 0) >= (position.requiredCount ?? 4));
+      await expect(card.locator('.status')).toHaveClass(full ? /status-full/ : /status-recruiting/);
+      await expect(card.locator('.status')).toHaveText(`${project.status} · ${full ? '已满员' : '招募中'}`);
+      await expect(card.locator('.recruitment-role')).toHaveText(project.roles.map((position) => `${roleNames[position.role]}（${position.filledCount ?? 0}/${position.requiredCount ?? 4}）`));
       expect(await card.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
     }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
 });
 
