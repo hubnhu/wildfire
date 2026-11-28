@@ -48,9 +48,9 @@ try {
   browser = await chromium.launch(existsSync(chrome) ? { executablePath: chrome } : {});
   const page = await browser.newPage({ baseURL: 'http://127.0.0.1:4322', viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
   const scenarios = [
-    ['unpublished-fixture', [...projects, { ...projects[0], slug: 'unpublished-example', name: '未发布测试项目', published: false, acceptingApplications: false }], projects.length],
-    ['hide-point', projects.map((project) => ({ ...project, published: project.slug === 'point' ? false : project.published, acceptingApplications: project.slug === 'point' ? false : project.acceptingApplications })), projects.length - 1],
-    ['one-project', projects.map((project) => ({ ...project, published: project.slug === 'taste', acceptingApplications: false })), 1],
+    ['unpublished-fixture', [...projects, { ...projects[0], slug: 'unpublished-example', name: '未发布测试项目', published: false }], projects.length],
+    ['hide-point', projects.map((project) => ({ ...project, published: project.slug === 'point' ? false : project.published })), projects.length - 1],
+    ['one-project', projects.map((project) => ({ ...project, published: project.slug === 'taste' })), 1],
     ['ten-projects', Array.from({ length: 10 }, (_, index) => ({ ...projects[0], slug: `test-${index}`, name: `测试项目 ${index}`, published: true })), 10],
   ];
   for (const [label, data, count] of scenarios) {
@@ -60,7 +60,7 @@ try {
     const initiator = await read('initiators/bai/index.html');
     assert.equal((home.match(/class="project-card"/g) || []).length, count);
     assert.match(home, new RegExp(`data-count>${count}</span>`));
-    assert.equal((apply.match(/<option /g) || []).length, 1 + data.filter((item) => item.published && item.acceptingApplications).length);
+    assert.equal((apply.match(/<option /g) || []).length, 1 + data.filter((item) => item.published).length);
     assert(apply.includes('value="any"'));
     assert.equal((initiator.match(/class="initiator-project stack/g) || []).length, data.filter((item) => item.published && item.initiator === 'bai').length);
     if (label === 'unpublished-fixture') {
@@ -107,7 +107,7 @@ try {
   };
   const newInitiator = { slug: 'synthetic-founder', name: '测试发起人', oneLiner: '合成发起人介绍', bio: ['合成简介'], xhsUrl: initiators[0].xhsUrl, links: [{ label: '合成博客', url: 'https://example.invalid/blog' }] };
   const newRole = { id: 'synthetic-role', name: '测试岗位' };
-  const newProject = { ...projects[0], slug: 'synthetic-project', name: '测试开放项目', initiator: newInitiator.slug, acceptingApplications: true, hasDetailPage: true, about: ['合成项目介绍'], progress: ['合成进展'], roles: [{ role: newRole.id, description: '合成岗位说明' }] };
+  const newProject = { ...projects[0], slug: 'synthetic-project', name: '测试开放项目', initiator: newInitiator.slug, hasDetailPage: true, about: ['合成项目介绍'], progress: ['合成进展'], roles: [{ role: newRole.id, description: '合成岗位说明' }] };
   const data = [...projects, newProject];
   await writeFile(initiatorPath, JSON.stringify([...initiators, newInitiator, { ...newInitiator, slug: 'synthetic-orphan', name: '没有已发布项目的发起人' }]));
   await writeFile(rolePath, JSON.stringify([...roles, newRole]));
@@ -205,10 +205,9 @@ try {
   newProject.acceptingApplications = false;
   await writeFile(projectPath, JSON.stringify(data)); build();
   assert(!(await read('apply/index.html')).includes('value="synthetic-project"'));
-  assert(!(await read('projects/synthetic-project/index.html')).includes('/apply?project=synthetic-project'));
-  assert(!(await read('projects/synthetic-project/index.html')).includes('加入之后'));
+  assert(!existsSync('dist/projects/synthetic-project/index.html'));
   checkApplication(newProject.slug, newRole.id, 400, newProject.name);
-  console.log('PASS project switch: option removed, generic application link and backend rejection without email');
+  console.log('PASS project unpublished: option and page removed, backend rejection without email');
   await writeFile(initiatorPath, originalInitiators);
   await writeFile(rolePath, originalRoles);
   await writeFile(sitePath, originalSite);

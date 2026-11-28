@@ -62,7 +62,6 @@
     "initiator": "ma",
     "published": true,
     "hasDetailPage": true,
-    "acceptingApplications": true,
     "externalUrl": "",
     "about": [
       "Stadium 是一个开源的在线足球游戏，玩法类似 HaxBall：俯视视角，几个人进同一个房间，用小球员把球踢进对方球门，规则简单，上手只要一分钟。",

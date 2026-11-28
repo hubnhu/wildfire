@@ -18,14 +18,12 @@ for (const role of roles) assert(slug.test(role.id) && typeof role.name === 'str
 assert(initiators.some((item) => item.slug === site.founder), '站点发起人不存在');
 assert.equal(new Set(collaboration.map((item) => item.id)).size, collaboration.length, '协作条目 id 不得重复');
 for (const project of projects) {
-  assert(['想法', '开发中', '已上线', '在营业务', '筹备中'].includes(project.status), '无效项目状态');
+  assert(['开发中', '已上线'].includes(project.status), '无效项目状态');
   assert(['暂无', '低', '中', '高', '未知'].includes(project.profitPotential), '无效盈利可能');
   assert(['cocreate', 'company'].includes(project.mode), '无效项目模式');
   assert.equal(typeof project.published, 'boolean');
   assert.equal(typeof project.hasDetailPage, 'boolean');
   assert(!project.published || project.initiator, '已发布项目必须有发起人');
-  assert.equal(typeof project.acceptingApplications, 'boolean', '申请开关必须为布尔值');
-  assert(!project.acceptingApplications || project.published, '开放申请的项目必须发布');
   assert(!project.initiator || initiators.some((item) => item.slug === project.initiator), '发起人不存在');
   assert(Array.isArray(project.roles) && project.roles.every((item) => Object.hasOwn(roleNames, item.role)), '项目岗位不存在');
   validateRecruitmentData(project);
