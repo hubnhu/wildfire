@@ -24,32 +24,32 @@
     "roles": [
       {
         "role": "product",
-        "filledCount": 4,
+        "filledCount": 2,
         "requiredCount": 4,
         "description": "了解申请者和项目发起人的需求，把它们转化为网站里的具体功能和使用流程。梳理需求、确定优先级，和设计、开发一起推进实现，再根据实际使用反馈持续改进。需要能把需求想清楚、说明白，并跟进到落地。"
       },
       {
         "role": "design",
         "description": "改进网站的信息呈现和使用体验，包括项目页面、申请流程和手机端排版；也会参与社交媒体内容的视觉设计。需要关注阅读和操作是否顺畅，能说明设计思路，并和开发一起把细节落地。",
-        "filledCount": 4,
+        "filledCount": 0,
         "requiredCount": 4
       },
       {
         "role": "dev",
         "description": "参与网站功能迭代，完善页面和申请流程，处理实际使用中出现的问题，并做好测试、上线和维护。需要有基本的编程能力，愿意读懂现有代码，把一个任务从实现做到可用。",
-        "filledCount": 4,
+        "filledCount": 1,
         "requiredCount": 4
       },
       {
         "role": "social",
         "description": "把野火的理念、项目和共创过程整理成适合发布的内容，参与选题、写作、发布和评论互动，帮助有兴趣的人了解并找到野火。需要愿意了解项目本身，表达清楚，并根据反馈持续调整内容。",
-        "filledCount": 4,
+        "filledCount": 0,
         "requiredCount": 4
       }
     ],
     "externalUrl": "",
     "acceptingApplications": true,
-    "memberCount": 16
+    "memberCount": 3
   },
   {
     "slug": "stadium",
@@ -79,23 +79,23 @@
       {
         "role": "dev",
         "description": "项目的主力。前端在 Canvas 里画球场和球员、处理键盘手柄输入；后端用 Node.js 跑游戏逻辑、判定碰撞和进球、防作弊。你需要：写过 JavaScript 或 TypeScript，自己做过能跑起来的小东西，哪怕是课程作业；不要求用过任何框架。前后端选一头就行，两头都想碰也欢迎。你会学到：多人游戏的状态同步怎么做，服务器端怎么裁决，以及一个游戏怎么部署和运维。",
-        "filledCount": 1,
+        "filledCount": 0,
         "requiredCount": 4
       },
       {
         "role": "product",
         "description": "设计一个在线足球或冰球游戏怎么玩：球员怎么动、什么算进球、一局多长、怎么让新手一分钟上手又让老手玩不腻。然后去听玩家的反馈，决定先做什么后做什么。你需要：玩过这类游戏，能把\"好玩\"拆成具体的规则写下来，能画简单的流程和草图。不要求产品工作经验。你会学到：从零定义一个产品，主导它的路线图。",
-        "filledCount": 2,
+        "filledCount": 0,
         "requiredCount": 4
       },
       {
         "role": "design",
         "description": "球场、球员、球的画面，以及房间、计分、菜单这些界面。风格简洁为主，重点是看得清、反应快。你需要：做过界面或游戏相关的视觉作品，有作品能给人看；会用任意一款设计工具。你会学到：怎么把设计落到一个实时运行的游戏里，和开发一起调到手感对为止。",
-        "filledCount": 3,
+        "filledCount": 0,
         "requiredCount": 4
       }
     ],
-    "memberCount": 6
+    "memberCount": 0
   },
   {
     "slug": "taste",
@@ -127,7 +127,7 @@
       {
         "role": "product",
         "description": "研究用户的真实需求，判断哪些功能值得做、哪些不值得，给出下一步的发展方向，并把它拆成可以落地的步骤。",
-        "filledCount": 0,
+        "filledCount": 1,
         "requiredCount": 4
       },
       {

@@ -4,6 +4,13 @@ import ProjectCard from '../components/ProjectCard.astro';
 import Collaboration from '../components/Collaboration.astro';
 import { publishedProjects, founder } from '../lib/content.mjs';
 const projects = publishedProjects();
+
+let totalMembers = 0;
+
+for (const project of projects) {
+  totalMembers += project.memberCount ?? 0;
+}
+
 const comparisons = [
   ['做的是什么', '真实的项目，有的已经上线', '公司的真实业务，但进门的门槛高', '多是安排好的课题', '练习和作业'],
   ['钱', '不收费，也没有工资', '一般有工资', '你付钱', '你付学费'],
@@ -45,6 +52,7 @@ const steps = [
       <div class="eyebrow muted">项目工作室 · 由发起人亲自把关</div>
       <h1><span class="hero-line">真项目，缺人做。</span><span class="hero-line">想做事的人，缺机会。</span></h1>
       <p class="hero-copy">野火把这两边放到一起。你加入一个真实的项目，由发起人亲自带，做出来的东西是真的，能写进简历。不收费，也没有工资。</p>
+      <p class="community-members"> 已有 {totalMembers} 人加入野火</p>
       <div class="button-row"><a href="/apply" class="button">申请加入</a><a href="#projects" class="button button-outline">看看在做的项目</a></div>
     </div>
   </section>
@@ -73,7 +81,7 @@ const steps = [
   <section id="projects">
     <div class="container stack gap-36">
       <div class="section-heading">
-        <div class="stack"><div class="eyebrow">项目</div><h2>正在做的项目</h2></div>
+        <div class="stack"><div class="eyebrow">项目</div><h2>正在做的项目</h2><p class ="community-members">已有{totalMembers}人参与</p> </div>
         <div class="project-controls"><span>共 <span data-count>{projects.length}</span> 个，左右拖动查看</span>
           <button type="button" class="arrow-button" aria-label="上一个项目" data-step="-1" aria-controls="project-scroller"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6" /></svg></button>
           <button type="button" class="arrow-button" aria-label="下一个项目" data-step="1" aria-controls="project-scroller"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg></button>
