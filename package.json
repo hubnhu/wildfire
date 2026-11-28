@@ -24,6 +24,6 @@
     "deploy:staging": "npm run build:staging && WRANGLER_LOG=error WRANGLER_WRITE_LOGS=false node scripts/wrangler.mjs deploy --config wrangler.jsonc --env staging --keep-vars",
     "terms:archive": "node scripts/archive-terms.mjs"
   },
-  "dependencies": { "astro": "7.3.8" },
-  "devDependencies": { "@playwright/test": "1.64.0", "wrangler": "4.149.0" }
+  "dependencies": { "astro": "7.4.7" },
+  "devDependencies": { "@playwright/test": "1.64.0", "wrangler": "4.165.0" }
 }
