@@ -2,7 +2,7 @@
 
 ## 自动部署
 
-公开仓库 [hubnhu/wildfire](https://github.com/hubnhu/wildfire) 的 main 是发布分支。贡献者经 PR 合入，维护者负责发布；Cloudflare Workers Builds 安装锁定依赖，运行 `npm run build:ci`，再运行 `npm run deploy:ci`，以 wrangler.jsonc 更新 wildfire Worker。GitHub Actions 的 `.github/workflows/ci.yml` 在 PR 及 main、staging 推送上运行 `npm run build:ci`，不部署。
+公开仓库 [hubnhu/wildfire](https://github.com/hubnhu/wildfire) 的默认分支是 staging，所有 PR 先合入 staging 验收；main 是发布分支，维护者负责发布。Cloudflare Workers Builds 安装锁定依赖，运行 `npm run build:ci`，再运行 `npm run deploy:ci`，以 wrangler.jsonc 更新 wildfire Worker。GitHub Actions 的 `.github/workflows/ci.yml` 在 PR 及 main、staging 推送上运行 `npm run build:ci`，不部署。
 
 发布记录在 Git 与 Cloudflare；当前验证见 [PROJECT](PROJECT.md)。
 
@@ -35,7 +35,7 @@ Preview command 只上传版本。变量与密钥见 [CONTRIBUTING](../CONTRIBUT
 
 测试部署保留后台变量，跳过 Wrangler 的严格差异拦截，并关闭差异日志以免打印收件名单。正式站的 CI 仍用严格检查。
 
-- GitHub：两分支均须 PR、负责人审批和 `build` 通过；新提交须重审。员工从 fork 提 PR。主站 PR 合并前须同步最新 main，勿把 staging 合回功能分支；影响验收时复验。
+- GitHub：两分支均须 PR、负责人审批和 `build` 通过；新提交须重审。员工从 fork 向 staging 提 PR；Dependabot 安全更新按默认分支提到 staging，同样验收后再进 main。主站 PR 合并前须同步最新 main，勿把 staging 合回功能分支；影响验收时复验。
 - Cloudflare：测试 Worker 连同仓库，发布分支选 `staging`；根目录与 Build command 留空，Deploy command 填 `npm run deploy:staging`。关闭其他分支预览；如须填写 Preview command，填 `npx wrangler versions upload --env staging`。
 - 合入 staging 后自动部署；一次验收一个版本，用合成资料检查页面、移动端、申请、收件及附件。仅将已验收改动提 PR 到 main。
 
